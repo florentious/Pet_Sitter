@@ -211,7 +211,7 @@
 						//$("#imgMessage").html("<span class='text-success'>해당이미지를 사용할 수 있습니다.</span>");
 						//$("#imgCheck").html("<img src='"+json.result+"' />"  );
 						
-						$("#imgCheck").attr("src", json.path);
+						$("#imgCheck").attr("src", "/Pet_Sitter"+ json.path);
 						//$("#test").val(json.path);
 						$("#imgPath").val(json.path);
 						$("#checkImg").val("yes");
