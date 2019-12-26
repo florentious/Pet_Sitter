@@ -204,9 +204,9 @@
 		<input type="hidden" name="checkPwd" id="checkPwd" value="no"/>
 		  
 		<div class="text-right">			
-			<button type="button" id="prevPage" class="btn btn-outline-info">Go Back</button>
-			<button type="button" id="updateMember" class="btn btn-outline-success">Update</button>
-			<button type="button" id="deleteMember" class="btn btn-outline-danger">Delete</button>
+			<button type="button" id="prevPage" class="btn btn-outline-info">뒤로</button>
+			<button type="button" id="updateMember" class="btn btn-outline-success">수정</button>
+			<button type="button" id="deleteMember" class="btn btn-outline-danger">삭제</button>
 			
 		</div>
 	
@@ -278,7 +278,7 @@
 			
 			if($("#beforePassword").val().length==0) {
 				$("#beforePassword").addClass("is-invalid");
-				$("#beforePasswordMessage").html("<span class='text-danger'>Input Current Password</span>");
+				$("#beforePasswordMessage").html("<span class='text-danger'>현재 비밀번호를 입력해주세요</span>");
 				$("#beforePassword").focus();
 				return;
 			}
@@ -287,20 +287,20 @@
 				
 				if($("#password").val().length==0) {
 					$("#password").addClass("is-invalid");
-					$("#passwordMessage").html("<span class='text-danger'>Input Password</span>");
+					$("#passwordMessage").html("<span class='text-danger'>비밀번호를 입력해주세요</span>");
 					$("#password").focus();
 					return;
 				}			
 				if($("#rePassword").val().length==0) {
 					$("#rePassword").addClass("is-invalid");
-					$("#rePasswordMessage").html("<span class='text-danger'>Input Password Confirm</span>");
+					$("#rePasswordMessage").html("<span class='text-danger'>비밀번호 확인을 입력해주세요</span>");
 					$("#rePassword").focus();
 					return;
 				}
 				
 				if($("#password").val() != $("#rePassword").val()) {
 					$("#rePassword").addClass("is-invalid");
-					$("#rePasswordMessage").html("<span class='text-danger'>Input Same Password</span>");
+					$("#rePasswordMessage").html("<span class='text-danger'>비밀번호와 비밀번호 확인이 다릅니다</span>");
 					$("#rePassword").val('');
 					$("#rePassword").focus();
 					return;
@@ -367,7 +367,7 @@
 			
 			if($("#beforePassword").val().length==0) {
 				$("#beforePassword").addClass("is-invalid");
-				$("#beforePasswordMessage").html("<span class='text-danger'>Input Current Password</span>");
+				$("#beforePasswordMessage").html("<span class='text-danger'>현재 비밀번호를 입력해주세요</span>");
 				$("#beforePassword").focus();
 				return;
 			}
@@ -376,20 +376,20 @@
 				
 				if($("#password").val().length==0) {
 					$("#password").addClass("is-invalid");
-					$("#passwordMessage").html("<span class='text-danger'>Input Password</span>");
+					$("#passwordMessage").html("<span class='text-danger'>비밀번호를 입력해주세요</span>");
 					$("#password").focus();
 					return;
 				}			
 				if($("#rePassword").val().length==0) {
 					$("#rePassword").addClass("is-invalid");
-					$("#rePasswordMessage").html("<span class='text-danger'>Input Password Confirm</span>");
+					$("#rePasswordMessage").html("<span class='text-danger'>비밀번호 확인을 입력해주세요</span>");
 					$("#rePassword").focus();
 					return;
 				}
 				
 				if($("#password").val() != $("#rePassword").val()) {
 					$("#rePassword").addClass("is-invalid");
-					$("#rePasswordMessage").html("<span class='text-danger'>Input Same Password</span>");
+					$("#rePasswordMessage").html("<span class='text-danger'>비밀번호와 비밀번호 확인이 다릅니다.</span>");
 					$("#rePassword").val('');
 					$("#rePassword").focus();
 					return;
