@@ -198,7 +198,7 @@
 				dataType : 'json',
 				error : function() {
 
-				},
+				}, 
 
 				success : function(json) {
 					//json => {"result" : "ok or fail"}
