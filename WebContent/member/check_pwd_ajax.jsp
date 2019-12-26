@@ -3,12 +3,12 @@
 <%@ page contentType="application/json; charset=utf-8" %>
 
 <%
-	String email = request.getParameter("email");
+	String id = request.getParameter("id");
 	String password = request.getParameter("password");
 
 	MemberDao dao = MemberDao.getInstance();
 	
-	boolean isCorrect = dao.isCorrect(email, password);
+	boolean isCorrect = dao.isCorrect(id, password);
 	
 	JSONObject obj = new JSONObject();
 	if(isCorrect) {

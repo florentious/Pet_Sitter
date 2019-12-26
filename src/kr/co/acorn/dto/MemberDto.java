@@ -106,6 +106,10 @@ public class MemberDto {
 		this.point = point;
 		this.pointCount = pointCount;
 	}
+	public MemberDto(String id, String pwd) {
+		
+		this(id,pwd,null,null,null,null,null,null,(byte) 0,null,0,0);
+	}
 	
 	
 	

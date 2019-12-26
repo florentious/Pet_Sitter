@@ -5,14 +5,13 @@
 <%
 	request.setCharacterEncoding("utf-8");
 
-	String email = request.getParameter("email");
+	String id = request.getParameter("id");
 	String password = request.getParameter("password");
 	
 	MemberDao dao = MemberDao.getInstance();
 	
-	//boolean isSuccess = dao.isCorrect(email, password);
 	
-	MemberDto dto = new MemberDto(email, null, password, null, null);
+	MemberDto dto = new MemberDto(id, password);
 		
 	dto = dao.getMember(dto);		// 일관성이 있어야함, 객체 2~3개이상 파라미터로 넘기면 객체로 넘기는 버릇!
 	
@@ -25,14 +24,14 @@
 		
 %>
 	<script>
-		alert('Success LogIn');
-		location.href="/index.jsp";
+		alert('로그인에 성공하셨습니다.');
+		location.href="../index.jsp";
 	</script>	
 <%
 	} else {
 %>
 	<script>
-		alert('Failed LogIn, Input correct Info');
+		alert('아이디 또는 비밀번호가 잘못됬습니다.');
 		history.back(-1);
 	</script>	
 <%

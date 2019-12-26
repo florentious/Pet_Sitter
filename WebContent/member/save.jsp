@@ -16,10 +16,10 @@
 	String tempType = request.getParameter("type");
 	String imgPath = request.getParameter("imgPath");
 	
-	byte type = 0;
+	byte type = (byte)0;
 	
 	if(tempType.equals("typeSitter")) {
-		type = 1;
+		type = (byte)1;
 	}
 	
 	MemberDao dao = MemberDao.getInstance();
@@ -34,7 +34,7 @@
 		
 <script>
 	alert("회원가입에 성공하셨습니다.");
-	location.href="index.jsp";
+	location.href="../index.jsp";
 </script>
 <% } else { %>
 <script>

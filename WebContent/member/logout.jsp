@@ -10,7 +10,7 @@
 	*/
 	//session.removeAttribute("member");	// 정보만 날리기 위해서 attribute
 	session.invalidate();
-	response.sendRedirect("/index.jsp");
+	response.sendRedirect("../index.jsp");
 
 
 %>

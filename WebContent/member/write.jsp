@@ -93,9 +93,9 @@
 				</div>
 				
 				<div class="form-group row">
-					<label for="phone" class="col-sm-3 col-form-label">폰번호</label>
+					<label for="phone" class="col-sm-3 col-form-label">전화번호</label>
 					<div class="col-sm-9">
-						<input type="text" class="form-control " id="phone" name="phone" placeholder="전화번호를 알려주세요">
+						<input type="tel" class="form-control " id="phone" name="phone" placeholder="전화번호를 알려주세요">
 						<div id="phoneMessage"></div>
 					</div>
 				</div>
@@ -111,7 +111,8 @@
 				<div class="form-group row">
 					<label for="comment" class="col-sm-3 col-form-label">간단 자기소개</label>
 					<div class="col-sm-9">
-						<input type="text" class="form-control " id="comment" name="comment" placeholder="뭐든 좋습니다">
+						<textarea class="col-sm-12" rows="4" id="comment" name="comment"></textarea>
+						<%-- <input type="text" class="form-control " id="comment" name="comment" placeholder="뭐든 좋습니다"> --%>
 						<div id="commentMessage"></div>
 					</div>
 				</div>
@@ -160,7 +161,7 @@
 			
 			<%-- check something --%>
 			<input type="hidden" name="checkId" id="checkId" value="no" />
-			<input type="hidden" name="checkPwd" id="checkPwd" value="no" />
+			<%-- <input type="hidden" name="checkPwd" id="checkPwd" value="no" /> --%>
 			<input type="hidden" name="checkImg" id="checkImg" value="no" />
 			
 			<div class="text-right">
@@ -296,10 +297,12 @@
 				return;
 			}
 			
+			/* 
 			if ($("#checkPwd").val() == "no") {
 				return;
 			}
-			
+			 */
+			 
 			if ($("#checkImg").val() == "no") {
 				return;
 			}
@@ -313,7 +316,7 @@
 			let ext = $(this).val().split('.').pop().toLowerCase();
 			
 			 if($.inArray(ext, ['gif', 'png', 'jpg', 'jpeg']) == -1) {
-				 resetFormElement($(this));
+				 //resetFormElement($(this));
 				 $("#imgMessage").html("<span class='text-danger'>이미지파일이 아닙니다.</span>");
 			 } else {
 				 $("#imgMessage").html("<span class='text-success'>해당이미지를 사용할 수 있습니다.</span>");
@@ -328,8 +331,9 @@
 			$("#idMessage").html('');
 
 			//primary key 이기 때문에 확인
-			let regId = /^[a-zA-Z][a-zA-Z0-9_\-]{3,26}$/
+			let regId = /^[a-zA-Z가-힣][a-zA-Z0-9가-힣_\-]{2,26}$/;
 			if (regId.test($("#id").val())) {
+			//if($("#id").val().length > 3) {
 				$.ajax({
 					type : "GET",
 					url : 'check_id_ajax.jsp?id='+ $("#id").val(),
@@ -361,10 +365,12 @@
 			$("#password").removeClass("is-invalid");
 			$("#passwordMessage").html('');
 			
-			let regPwd = /^{3,20}&/
-			if(regPwd.test($("#password").val())) {
+			//let regPwd = /^[.]{4,20}$/	
+			//if(regPwd.test($("#password").val())) {
+			if($("#password").val().length >= 3 && $("#password").val().length <= 20) {
 				$("#password").removeClass("is-invalid");
 				$("#passwordMessage").html('');
+				$("#checkPwd").val("yes");
 			} else {
 				$("#password").addClass("is-invalid");
 				$("#passwordMessage").html("<span class='text-danger'>비밀번호는 3-20글자 사이입니다.</span>");
@@ -375,15 +381,17 @@
 			$("#rePassword").removeClass("is-invalid");
 			$("#rePasswordMessage").html('');
 			
-			let regPwd = /^{3,20}&/
-				if(regPwd.test($("#rePassword").val())) {
-					$("#rePassword").removeClass("is-invalid");
-					$("#rePasswordMessage").html('');
-				} else {
-					$("#rePassword").addClass("is-invalid");
-					$("#rePasswordMessage").html("<span class='text-danger'>비밀번호는 3-20글자 사이입니다.</span>");
-					$("#rePassword").focus();
-				}
+			//let regPwd = /^{3,20}&/;
+			//if(regPwd.test($("#rePassword").val())) {
+			if($("#rePassword").val().length >= 3 && $("#rePassword").val().length <= 20) {
+			
+				$("#rePassword").removeClass("is-invalid");
+				$("#rePasswordMessage").html('');
+			} else {
+				$("#rePassword").addClass("is-invalid");
+				$("#rePasswordMessage").html("<span class='text-danger'>비밀번호는 3-20글자 사이입니다.</span>");
+				$("#rePassword").focus();
+			}
 		});
 		
 		$("#name").keyup(function() {

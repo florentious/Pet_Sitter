@@ -62,7 +62,7 @@
      	 } else {
       %>
       	<li class="nav-item">
-      		<a class="nav-link" href="<%=contextPath %>/member/view.jsp?email=<%=memberDto.getId()%>"><%=memberDto.getName() %>(<%=memberDto.getId() %>)님 환영합니다. </a>
+      		<a class="nav-link" href="<%=contextPath %>/member/view.jsp?id=<%=memberDto.getId()%>"><%=memberDto.getName() %>(<%=memberDto.getId() %>)님 환영합니다. </a>
       	</li>
       	
       	<li class="nav-item">

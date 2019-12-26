@@ -16,7 +16,7 @@
 	}
 	
 	if(memberDto != null) {
-		response.sendRedirect("/index.jsp");
+		response.sendRedirect("../index.jsp");
 		return;
 	}
 
@@ -25,8 +25,8 @@
   <!-- breadcrumb start -->
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="list.jsp">Home</a></li>
-      <li class="breadcrumb-item active" aria-current="page">Log In</li>
+      <li class="breadcrumb-item"><a href="../index.jsp">Home</a></li>
+      <li class="breadcrumb-item active" aria-current="page">로그인</li>
     </ol>
   </nav>
   
@@ -39,30 +39,30 @@
       <div class="col-lg-12">
 
    <%-- input content --%>
-		<h3><strong>Log In</strong></h3><br>
+		<h3><strong>로그인</strong></h3><br>
 		
 		<form name="f" method="post" >
 		
 		  <div class="form-group row">
-		    <label for="email" class="col-sm-3 col-form-label">E-mail</label>
+		    <label for="id" class="col-sm-3 col-form-label">아이디</label>
 		    <div class="col-sm-9">
-		      <input type="email" class="form-control" id="email" name="email">
-		      <div id="emailMessage"></div>
+		      <input type="email" class="form-control" id="id" name="id" placeholder="아이디를 입력해주세요">
+		      <div id="idMessage"></div>
 		    </div>
 		  </div>
 		  
 		  <div class="form-group row">
-		    <label for="password" class="col-sm-3 col-form-label">Password</label>
+		    <label for="password" class="col-sm-3 col-form-label">비밀번호</label>
 		    <div class="col-sm-9">
-		      <input type="password" class="form-control" id="password" name="password">
+		      <input type="password" class="form-control" id="password" name="password" placeholder="비밀번호를 입력해주세요">
 		      <div id="passwordMessage"></div>
 		    </div>
 		  </div>
 		  
 		</form>
 		<div class="text-right">
-			<button type="button" id="goback" class="btn btn-outline-info">Go back</button>
-			<button type="button" id="loginMember" class="btn btn-outline-success">Sign In</button>
+			<button type="button" id="goback" class="btn btn-outline-info">뒤로</button>
+			<button type="button" id="loginMember" class="btn btn-outline-success">로그인</button>
 		</div>
 	
           
@@ -78,21 +78,21 @@
 
 <script>
 	$(function() {
-		$("#email").focus();
+		$("#id").focus();
 		$("#loginMember").click(function() {
 			// 자바 스크립트 유효성 검사
 			
-			if($("#email").val().length==0) {
-				$("#email").addClass("is-invalid");
-				$("#emailMessage").html("<span class='text-danger'>Input E-mail</span>");
-				$("#email").focus();
+			if($("#id").val().length==0) {
+				$("#id").addClass("is-invalid");
+				$("#idMessage").html("<span class='text-danger'>아이디를 입력해주세요</span>");
+				$("#id").focus();
 				return;
 			}
 			
-			let regEmail = /^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-Za-z0-9\-]+/;
-			if(regEmail.test($("#email").val()) == false) {
+			let regId = /^[a-zA-Z가-힣][a-zA-Z0-9가-힣_\-]{2,26}$/;
+			if(regId.test($("#email").val()) == false) {
 				$("#email").addClass("is-invalid");
-				$("#emailMessage").html("<span class='text-danger'>Input Correct E-mail Type</span>");
+				$("#emailMessage").html("<span class='text-danger'>적절한 아이디를 입력해주세요</span>");
 				$("#email").focus();
 				return;
 			}
@@ -100,7 +100,7 @@
 			
 			if($("#password").val().length==0) {
 				$("#password").addClass("is-invalid");
-				$("#passwordMessage").html("<span class='text-danger'>Input Password</span>");
+				$("#passwordMessage").html("<span class='text-danger'>비밀번호를 입력해주세요</span>");
 				$("#password").focus();
 				return;
 			}			
@@ -113,18 +113,18 @@
 		$("#password").keydown(function(key) {
 
 			if (key.keyCode == 13) {
-				if($("#email").val().length==0) {
-					$("#email").addClass("is-invalid");
-					$("#emailMessage").html("<span class='text-danger'>Input E-mail</span>");
-					$("#email").focus();
+				if($("#id").val().length==0) {
+					$("#id").addClass("is-invalid");
+					$("#idMessage").html("<span class='text-danger'>아이디를 입력해주세요</span>");
+					$("#id").focus();
 					return;
 				}
 				
-				let regEmail = /^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-Za-z0-9\-]+/;
-				if(regEmail.test($("#email").val()) == false) {
-					$("#email").addClass("is-invalid");
-					$("#emailMessage").html("<span class='text-danger'>Input Correct E-mail Type</span>");
-					$("#email").focus();
+				let regId = /^[a-zA-Z가-힣][a-zA-Z0-9가-힣_\-]{2,26}$/;
+				if(regId.test($("#id").val()) == false) {
+					$("#id").addClass("is-invalid");
+					$("#idMessage").html("<span class='text-danger'>아이디를 입력해주세요</span>");
+					$("#id").focus();
 					return;
 				}
 				
@@ -144,9 +144,9 @@
 		});
 		
 		
-		$("#email").keyup(function() {
-			$("#email").removeClass("is-invalid");
-			$("#emailMessage").html('');
+		$("#id").keyup(function() {
+			$("#id").removeClass("is-invalid");
+			$("#idMessage").html('');
 			
 			
 		});

@@ -47,7 +47,7 @@ public class MemberDao {
 			
 			sql.append("SELECT m_id ");
 			sql.append("FROM p_member ");
-			sql.append("WHERE m_id = ?");
+			sql.append("WHERE m_id = ? ");
 			
 			ps = con.prepareStatement(sql.toString());
 			
@@ -70,6 +70,43 @@ public class MemberDao {
 		
 		return isDuplicate;
 	}
+	
+	//check update/delete id,pwd
+	public boolean isCorrect(String id, String pwd) {
+		boolean isSuccess = false;
+		
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		
+		try {
+			con = ConnLocator.getConnection();
+			StringBuffer sql = new StringBuffer();
+			sql.append("SELECT m_id FROM p_member WHERE m_id = ? AND m_pwd = PASSWORD(?) ");
+			ps = con.prepareStatement(sql.toString());
+			
+			int index=0;
+			ps.setString(++index, id);
+			ps.setString(++index, pwd);
+			
+			rs = ps.executeQuery();
+			
+			if(rs.next()) {
+				isSuccess = true;
+				
+			}
+			
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			close(con,ps,rs);
+		}
+		
+		return isSuccess;
+	}
+	
 	
 	// use log-in session
 	public MemberDto getMember(MemberDto dto) {
@@ -110,7 +147,7 @@ public class MemberDao {
 				int point = rs.getInt(++index);
 				int pointCount = rs.getInt(++index);
 				
-				memberDto = new MemberDto(id,name,null,loc,phone,curPet,imgPath,comment,type,regDate,point,pointCount);
+				memberDto = new MemberDto(id,null,name,loc,phone,curPet,imgPath,comment,type,regDate,point,pointCount);
 			}
 			
 		} catch (SQLException e) {
@@ -136,7 +173,7 @@ public class MemberDao {
 		try {
 			con = ConnLocator.getConnection();
 			StringBuffer sql = new StringBuffer();
-			sql.append("INSERT INTO member(m_id, PASSWORD(m_pwd), m_name, m_loc, m_phone, m_pet, m_img_path, m_comment, m_type, m_regdate, m_point, m_point_count) ");
+			sql.append("INSERT INTO p_member(m_id, m_pwd, m_name, m_loc, m_phone, m_pet, m_img_path, m_comment, m_type, m_regdate, m_point, m_point_count) ");
 			sql.append(" VALUES(?,PASSWORD(?),?,?,?,?,?,?,?,NOW(),0,0) ");
 			ps = con.prepareStatement(sql.toString());
 			
@@ -165,6 +202,191 @@ public class MemberDao {
 		
 		return isSuccess;
 		
+	}
+	
+	//CRUD - Update
+	public boolean update(MemberDto dto,boolean isChangePwd, boolean isChangeImg) {
+		boolean isSuccess = false;
+		
+		Connection con = null;
+		PreparedStatement ps = null;
+		
+		try {
+			con = ConnLocator.getConnection();
+			StringBuffer sql = new StringBuffer();
+			
+			if(isChangePwd && isChangeImg) {
+				sql.append("UPDATE p_member ");
+				sql.append("SET m_pwd = PASSWORD(?), m_name=?, m_loc=?, m_phone=?, m_pet=?, m_img_path=?, m_comment=?, m_type=? ");
+				sql.append("WHERE m_id = ? ");
+				ps = con.prepareStatement(sql.toString());
+				
+				// regDate => now , point => must do not control themselves
+				int index=0;
+				ps.setString(++index, dto.getPwd());
+				ps.setString(++index, dto.getName());
+				ps.setString(++index, dto.getLoc());
+				ps.setString(++index, dto.getPhone());
+				ps.setString(++index, dto.getCurPet());
+				ps.setString(++index, dto.getImgPath());
+				ps.setString(++index, dto.getComment());
+				ps.setByte(++index, dto.getType());
+				
+				ps.setString(++index, dto.getId());
+				
+			} else if(!isChangePwd && isChangeImg) {
+				
+				sql.append("UPDATE p_member ");
+				sql.append("SET m_name=?, m_loc=?, m_phone=?, m_pet=?, m_img_path=?, m_comment=?, m_type=? ");
+				sql.append("WHERE m_id = ? ");
+				ps = con.prepareStatement(sql.toString());
+				
+				// regDate => now , point => must do not control themselves
+				int index=0;
+				ps.setString(++index, dto.getName());
+				ps.setString(++index, dto.getLoc());
+				ps.setString(++index, dto.getPhone());
+				ps.setString(++index, dto.getCurPet());
+				ps.setString(++index, dto.getImgPath());
+				ps.setString(++index, dto.getComment());
+				ps.setByte(++index, dto.getType());
+				
+				ps.setString(++index, dto.getId());
+				
+			} else if(isChangePwd && !isChangeImg) {
+				
+				sql.append("UPDATE p_member ");
+				sql.append("SET m_pwd = PASSWORD(?), m_name=?, m_loc=?, m_phone=?, m_pet=?,  m_comment=?, m_type=? ");
+				sql.append("WHERE m_id = ? ");
+				ps = con.prepareStatement(sql.toString());
+				
+				// regDate => now , point => must do not control themselves
+				int index=0;
+				ps.setString(++index, dto.getPwd());
+				ps.setString(++index, dto.getName());
+				ps.setString(++index, dto.getLoc());
+				ps.setString(++index, dto.getPhone());
+				ps.setString(++index, dto.getCurPet());
+				ps.setString(++index, dto.getComment());
+				ps.setByte(++index, dto.getType());
+				
+				ps.setString(++index, dto.getId());
+			} else  {
+				
+				sql.append("UPDATE p_member ");
+				sql.append("SET m_name=?, m_loc=?, m_phone=?, m_pet=?,  m_comment=?, m_type=? ");
+				sql.append("WHERE m_id = ? ");
+				ps = con.prepareStatement(sql.toString());
+				
+				// regDate => now , point => must do not control themselves
+				int index=0;
+				ps.setString(++index, dto.getName());
+				ps.setString(++index, dto.getLoc());
+				ps.setString(++index, dto.getPhone());
+				ps.setString(++index, dto.getCurPet());
+				ps.setString(++index, dto.getComment());
+				ps.setByte(++index, dto.getType());
+				
+				ps.setString(++index, dto.getId());
+			}
+			
+			ps.executeUpdate();
+			
+			isSuccess = true;
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			close(con,ps,null);
+		}
+		
+		return isSuccess;
+	}
+	
+	//CRUD - Delete
+	public boolean delete(String id) {
+		boolean isSuccess = false;
+		
+		Connection con = null;
+		PreparedStatement ps = null;
+		
+		try {
+			con = ConnLocator.getConnection();
+			StringBuffer sql = new StringBuffer();
+			sql.append("DELETE FROM p_member WHERE m_id = ?");
+			ps = con.prepareStatement(sql.toString());
+			
+			int index=0;
+			ps.setString(++index, id);
+			
+			ps.executeUpdate();
+			
+			isSuccess = true;
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			close(con,ps,null);
+		}
+		
+		return isSuccess;
+	}
+	
+	
+	
+	
+	// select One
+	public MemberDto select(String beforeId) {
+		MemberDto memberDto = null;
+		
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		
+		try {
+			con = ConnLocator.getConnection();
+			
+			StringBuffer sql = new StringBuffer();
+			
+			sql.append("SELECT m_id, m_name, m_loc, m_phone, m_pet, m_img_path, m_comment, m_type, m_regdate, m_point, m_point_count ");
+			sql.append("FROM p_member ");
+			sql.append("WHERE m_id = ? ");
+			
+			ps = con.prepareStatement(sql.toString());
+			
+			int index = 0;
+			ps.setString(++index, beforeId);
+			
+			rs = ps.executeQuery();
+			
+			if(rs.next()) {
+				index = 0;
+				String id = rs.getString(++index);
+				String name = rs.getString(++index);
+				String loc = rs.getString(++index);
+				String phone = rs.getString(++index);
+				String curPet = rs.getString(++index);
+				String imgPath = rs.getString(++index);
+				String comment = rs.getString(++index);
+				byte type = rs.getByte(++index);
+				String regDate = rs.getString(++index);
+				int point = rs.getInt(++index);
+				int pointCount = rs.getInt(++index);
+				
+				memberDto = new MemberDto(id,null,name,loc,phone,curPet,imgPath,comment,type,regDate,point,pointCount);
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			close(con,ps,rs);
+		}
+		
+		return memberDto;
+	
 	}
 	
 	
