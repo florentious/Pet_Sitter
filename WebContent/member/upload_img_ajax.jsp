@@ -40,7 +40,7 @@
 	
 	String fileName =  multi.getFilesystemName("img");
 	
-	String imgPath = "/upload/file/"+ year+ "/" + month  + "/" + fileName;
+	String imgPath = "/Pet_Sitter/upload/file/"+ year+ "/" + month  + "/" + fileName;
 	String absPath = path + "/"+ fileName;
 	
 	JSONObject obj = new JSONObject();
