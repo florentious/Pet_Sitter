@@ -19,7 +19,11 @@
       <div class="col-lg-12">
 
    <%-- input content --%>
-
+			<div class="">
+			
+			
+			
+			</div>
           
             
       </div>

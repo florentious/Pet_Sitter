@@ -51,7 +51,7 @@
 
 				<%-- ID(need to idReg) primary key --%>
 				<div class="form-group row">
-					<label for="id" class="col-sm-3 col-form-label">아이디(4-25, 첫글자 영문영문,-._ )</label>
+					<label for="id" class="col-sm-3 col-form-label">아이디(4-25, 첫글자 영문한글,-._ )</label>
 					<div class="col-sm-9">
 						<input type="text" class="form-control " id="id" name="id" placeholder="아이디를 입력해주세요.">
 						<div id="idMessage"></div>
