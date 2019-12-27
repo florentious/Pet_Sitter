@@ -9,7 +9,7 @@ import javax.naming.NamingException;
 import javax.sql.DataSource;
 
 
-// db �뿰寃곗떆�뿉 媛앹껜
+
 public class ConnLocator {
 	
 	public static Connection getConnection() throws SQLException{

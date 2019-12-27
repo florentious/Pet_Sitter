@@ -15,6 +15,8 @@
 	int year = c.get(Calendar.YEAR);
 	int month = c.get(Calendar.MONTH)+1;
 	path += File.separator + year + File.separator + month;
+	
+	String contextPath = request.getContextPath();
 	 
 	 
 	//String path = "D:/dev/workspace/Pet_Sitter/img/";
@@ -40,7 +42,7 @@
 	
 	String fileName =  multi.getFilesystemName("img");
 	
-	String imgPath = "/Pet_Sitter/upload/file/"+ year+ "/" + month  + "/" + fileName;
+	String imgPath =  contextPath + "/upload/file/"+ year+ "/" + month  + "/" + fileName;
 	String absPath = path + "/"+ fileName;
 	
 	JSONObject obj = new JSONObject();
