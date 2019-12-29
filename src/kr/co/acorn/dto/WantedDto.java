@@ -7,6 +7,8 @@ public class WantedDto {
 	private String regDate;
 	private boolean isEnd;
 	private String id;
+	
+	
 	public int getNo() {
 		return no;
 	}
@@ -31,10 +33,10 @@ public class WantedDto {
 	public void setRegDate(String regDate) {
 		this.regDate = regDate;
 	}
-	public boolean isEnd() {
+	public boolean getIsEnd() {
 		return isEnd;
 	}
-	public void setEnd(boolean isEnd) {
+	public void setIsEnd(boolean isEnd) {
 		this.isEnd = isEnd;
 	}
 	public String getId() {

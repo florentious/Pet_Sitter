@@ -12,7 +12,6 @@
 	//String tempLen = request.getParameter("len");
 
 	int cPage = 0;
-	// cPage = Integer.parseInt(temp_page); 하면 이상하면 
 	
 	int start = 0;
 	int len = 10;
@@ -188,10 +187,13 @@
 				</ul>
 			</nav>
 
-
+			<% if(memberDto.getType() == 1 ) { %>
 			<div class="text-right">
-				<a href="write.jsp?page=<%=cPage %>" class="btn btn-outline-success">Sign Up</a>
+				<a href="write.jsp?page=<%=cPage %>" class="btn btn-outline-success">등록하기</a>
 			</div>
+			<% } %>
+		
+			
 		</div>
     </div>
   </div>

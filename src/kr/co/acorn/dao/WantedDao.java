@@ -68,7 +68,44 @@ public class WantedDao {
 		
 	}
 	
+	public int getMaxNo() {
+		int maxNo = 0;
+		
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		
+		try {
+			con = ConnLocator.getConnection();
+			
+			StringBuffer sql = new StringBuffer();
+			sql.append("SELECT MAX(w_no)+1 FROM p_wanted ");
+			ps = con.prepareStatement(sql.toString());
+			
+			rs = ps.executeQuery();
+			
+			if(rs.next()) {
+				int index = 0;
+				maxNo = rs.getInt(++index);
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			close(con, ps, rs);
+			
+		}
+		
+		return maxNo;
+		
+	}
 	
+	
+	
+	
+	
+	// CRUD
 	public ArrayList<WantedDto> select(int start, int len) {
 		ArrayList<WantedDto> list = new ArrayList<WantedDto>();
 		
@@ -114,6 +151,45 @@ public class WantedDao {
 		}
 		
 		return list;
+	}
+	
+	//insert
+	public boolean insert(WantedDto dto) {
+		boolean isSuccess = false;
+		
+		Connection con = null;
+		PreparedStatement ps = null;
+		
+		try {
+			con = ConnLocator.getConnection();
+			
+			StringBuffer sql = new StringBuffer();
+			sql.append("INSERT INTO wanted(w_no, w_title, w_content, w_regDate, w_isEnd, w_id ) ");
+			sql.append("VALUES(?,?,?,NOW(),?,?	 ) ");
+			
+			ps = con.prepareStatement(sql.toString());
+			int index=0;
+			ps.setInt(++index, dto.getNo());
+			ps.setString(++index, dto.getTitle());
+			ps.setString(++index, dto.getContent());
+			ps.setBoolean(++index, dto.getIsEnd());
+			ps.setString(++index, dto.getId());
+			
+			ps.executeUpdate();
+			
+			isSuccess = true;
+			
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			close(con,ps,null);
+		}
+		
+		
+		
+		return isSuccess;
 	}
 	
 	
