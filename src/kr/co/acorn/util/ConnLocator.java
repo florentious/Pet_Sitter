@@ -18,7 +18,7 @@ public class ConnLocator {
 		
 		try {
 			Context context = new InitialContext();
-			ds = (DataSource) context.lookup("java:comp/env/jdbc/db");
+			ds = (DataSource) context.lookup("java:comp/env/jdbc/acorn");
 			con = ds.getConnection();
 		} catch (NamingException e) {
 			// TODO Auto-generated catch block
