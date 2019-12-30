@@ -11,14 +11,22 @@
 	int no = dao.getMaxNo();
 	String title = request.getParameter("title");
 	String content = request.getParameter("content");
-	
+	/* 
 	// togle check box는 어떻게 나오는가 확인해봐야함
 	String temp = request.getParameter("isEnd");
 	boolean isEnd = false;
 	if(temp.equals("checked")) {
 		isEnd = true;
 	}
+	 */
+	 
+	String temp = request.getParameter("isEnd");
 	
+	boolean isEnd = false;
+	 
+	if(temp != null) {
+		isEnd = true;
+	}
 	
 	String id = request.getParameter("id");
 	
@@ -32,12 +40,12 @@
 %>
 		
 <script>
-	alert("글 등록이 완료 되었습니다.");
-	location.href="../index.jsp";
+	alert("글 등록이 완료 되었습니다.<%=temp%>");
+	location.href="list.jsp";
 </script>
 <% } else { %>
 <script>
-	alert("등록에 실패하셨습니다.");	
+	alert("등록에 실패하셨습니다.<%=temp%>");	
 	history.back(-1);
 </script>
 <% }%>

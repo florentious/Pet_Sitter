@@ -18,7 +18,7 @@
 	
 	byte type = (byte)0;
 	
-	if(tempType.equals("typeSitter")) {
+	if(tempType.equals("petSitter")) {
 		type = (byte)1;
 	}
 	

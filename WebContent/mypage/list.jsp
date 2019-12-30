@@ -80,14 +80,9 @@
 	startPage = cPage % pageLength == 0 ? 1 + (cpage/pageLength - 1) * pageLength  : 1 + (cpage/pageLength ) * pageLength;
 	endPage = totalPage > (startPage + pageLength -1 )? (startPage + pageLength -1 ) : totalPage;
 	 */
-	ArrayList<WantedDto> list = dao.select(start, len);
+	ArrayList<WantedDto> list = dao.select(start, len,memberDto.getId());
 	 
 	pageNum = totalRows-((cPage-1)*len);
-	
-	if(memberDto == null) {
-		response.sendRedirect(contextPath + "/index.jsp ");
-		return;
-	}
 	
 
 %>
@@ -96,7 +91,7 @@
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
       <li class="breadcrumb-item"><a href="<%=contextPath %>/index.jsp">Home</a></li>
-      <li class="breadcrumb-item active" aria-current="page">Wanted</li>
+      <li class="breadcrumb-item active" aria-current="page">My Page</li>
     </ol>
   </nav>
   
@@ -108,7 +103,7 @@
     <div class="row">
       <div class="col-lg-12">
       
-      <h3><strong>애완동물과 함께 해드립니다</strong><small>( 글 수 : <%=totalRows %> )</small></h3><br>
+      <h3><strong>내가 쓴 글</strong><small>( 글 수 : <%=totalRows %> )</small></h3><br>
       
       <div class="text-right"></div>
 
@@ -141,10 +136,11 @@
 		  	<form id="f" method="post">
 			    <tr>			    	
 			      <td><a href="view.jsp?page=<%=cPage%>&no=<%=dto.getNo() %>"><%=dto.getNo() %></a></td>
+			      
 			      <td><a href="view.jsp?page=<%=cPage%>&no=<%=dto.getNo() %>"><%=dto.getTitle() %></a></td>
 			      <td><%=dto.getId() %></td>
 			      <td><%=dto.getRegDate() %></td>
-			      <td><button class="btn btn-outline-success">예약</button></td>
+			      <td><button class="btn btn-outline-success">예약하기</button></td>
 			    </tr>
 		    </form>
 		    
@@ -191,11 +187,11 @@
 				</ul>
 			</nav>
 
-			<% if(memberDto.getType() == 1 ) { %>
+			<% //if(memberDto.getType() == 1 ) { %>
 			<div class="text-right">
 				<a href="write.jsp?page=<%=cPage %>" class="btn btn-outline-success">등록하기</a>
 			</div>
-			<% } %>
+			<% //} %>
 		
 			
 		</div>

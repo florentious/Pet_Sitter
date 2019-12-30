@@ -21,7 +21,7 @@
 	
 	byte type = (byte)0;
 	
-	if(tempType.equals("typeSitter")) {
+	if(tempType.equals("petSitter")) {
 		type = (byte)1;
 	}
 	
@@ -46,7 +46,7 @@
 	if(isSuccess) {
 %>
 <script>
-	alert("Update Success");
+	alert("업데이트 완료");
 	location.href = "view.jsp?page=<%=cPage%>";
 </script>
 
@@ -55,7 +55,7 @@
 	} else {
 %>
 <script>
-	alert("DataBase Error");
+	alert("에러났어요");
 	history.back(-1)
 	<%-- location.href = "view.jsp?page="+<%=cPage%>+"&no="+<%=no%>; --%>
 </script>

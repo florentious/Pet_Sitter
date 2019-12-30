@@ -1,4 +1,6 @@
 
+<%@page import="kr.co.acorn.dto.WantedDto"%>
+<%@page import="kr.co.acorn.dao.WantedDao"%>
 <%@page import="kr.co.acorn.dto.MemberDto"%>
 <%@page import="kr.co.acorn.dao.MemberDao"%>
 <%@ page pageEncoding="utf-8" %>
@@ -7,29 +9,47 @@
 
 <%
 	String tempPage = request.getParameter("page");
-	//String tempId = request.getParameter("id");
+	String tempNo = request.getParameter("no");
 	
 	// 이상하게 치는 양반을 위한 방안
 	if(tempPage == null || tempPage.length() == 0) {
 		tempPage="1";
 	}
-	/* 
-	if(tempId == null || tempId.length() == 0) {
-		response.sendRedirect("../index.jsp?page="+tempPage);
+	
+	 
+	if(tempNo == null || tempNo.length() == 0) {
+		response.sendRedirect("list.jsp?page="+tempPage);
 		return;
 	}
-	 */
-	int cPage = 0;
+	
+	int no = 1;
+	try {
+		no = Integer.parseInt(tempNo);
+	} catch(NumberFormatException e) {
+		response.sendRedirect("list.jsp?page="+tempPage);
+		return;
+	}
+	 
+	int cPage = 1;
+	try {
+		cPage = Integer.parseInt(tempPage);
+	} catch(NumberFormatException e) {
+		response.sendRedirect("list.jsp?page="+tempPage);
+		return;
+	}
 	
 	
+	
+	WantedDao wantedDao = WantedDao.getInstance();
+	WantedDto wantedDto = wantedDao.select(no);
+	 
+	if(wantedDto == null ) {
+		response.sendRedirect("list.jsp?page="+cPage);
+		return;
+	}
 	
 	MemberDao dao = MemberDao.getInstance();
-	MemberDto dto = dao.select(memberDto.getId());
-	
-	if(dto == null) {
-		response.sendRedirect("../index.jsp?page="+cPage);
-		return;
-	}
+	MemberDto dto = dao.select(wantedDto.getId());
 	
 	
 
@@ -39,7 +59,7 @@
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
       <li class="breadcrumb-item"><a href="../index.jsp">Home</a></li>
-      <li class="breadcrumb-item active" aria-current="page">Member</li>
+      <li class="breadcrumb-item active" aria-current="page">Wanted</li>
     </ol>
   </nav>
   
@@ -52,62 +72,76 @@
       <div class="col-lg-12">
 
    <%-- input content --%>
-		<h3><strong>세부사항</strong></h3><br>
+		<h3><strong>세부내용</strong></h3><br>
 		
+		
+		 <%
+		 if(memberDto.getId().equals(wantedDto.getId())) {
+			 // 작성자인경우 제목이나 content를 수정가능하게 해야함
+		%> 
+			
+			
+			
+		<%
+		 } else if(memberDto.getType() == 1){
+			 // 작성자가 아닌 펫시터인경우
+			
+			 
+		%>
+		
+		
+		<%
+		 } else {
+			 // 킹반인 인경우
+		
+		%>
+		
+		
+		<%
+		 }
+		 %>
+		  
 		<form name="f" method="post" >
+		  <div class="form-group row">
+		    <label for="title" class="col-sm-3 col-form-label">제목</label>
+		    <div class="col-sm-9">
+		      <input type="text" class="form-control " id="title" name="title" readonly value="<%=wantedDto.getTitle() %>">
+		      <div id="titleMessage"></div>
+		    </div>
+		  </div>
+		  
+		  
+		  <div class="form-group row">
+		  	<div class="col-sm-9">
+		  		<div class="form-group row">
+				    <label for="id" class="col-sm-4 col-form-label">작성자 아이디</label>
+				    <div class="col-sm-8">
+				      <input type="text" class="form-control " id="id" name="id" readonly value="<%=dto.getId() %>">
+				      <div id="nameMessage"></div>
+				    </div>
+				  </div>
 		
-		 <%--  <div class="form-group row">
-		    <label for="no" class="col-sm-3 col-form-label">Employer Number</label>
-		    <div class="col-sm-9">
-		      <input type="number" class="form-control" id="no" name="no">
-		    </div>
-		  </div> --%>
-		  
-		  <div class="form-group row">
-		    <label for="id" class="col-sm-3 col-form-label">아이디</label>
-		    <div class="col-sm-9">
-		      <input type="text" class="form-control " id="id" name="id" readonly value="<%=dto.getId() %>">
-		      <div id="nameMessage"></div>
-		    </div>
-		  </div>
-
-		  <div class="form-group row">
-		    <label for="beforePassword" class="col-sm-3 col-form-label">현재 비밀번호(입력주셔야 수정/탈퇴 가능)</label>
-		    <div class="col-sm-9">
-		      <input type="password" class="form-control" id="beforePassword" name="beforePassword">
-		      <div id="beforePasswordMessage"></div>
-		    </div>
+				  
+				  <div class="form-group row">
+				    <label for="name" class="col-sm-4 col-form-label">이름</label>
+				    <div class="col-sm-8">
+				      <input type="text" class="form-control " id="name" name="name" readonly value="<%=dto.getName()%>">
+				      <div id="nameMessage"></div>
+				    </div>
+				  </div>
+		  	</div>
+		  	<div class="col-sm-3">
+		  		<img style="width : 9em; height : 9em" src="<%=dto.getImgPath() %>">
+		  	</div>
 		  </div>
 		  
-		  <div class="form-group row">
-		    <label for="password" class="col-sm-3 col-form-label">새로운 비밀번호</label>
-		    <div class="col-sm-9">
-		      <input type="password" class="form-control" id="password" name="password">
-		      <div id="passwordMessage"></div>
-		    </div>
-		  </div>
 		  
-		  <div class="form-group row">
-		    <label for="rePassword" class="col-sm-3 col-form-label">새로운 비밀번호 확인</label>
-		    <div class="col-sm-9">
-		      <input type="password" class="form-control" id="rePassword" name="rePassword">
-		      <div id="rePasswordMessage"></div>
-		    </div>
-		  </div>
 		  
-		  		  
-		  <div class="form-group row">
-		    <label for="name" class="col-sm-3 col-form-label">이름</label>
-		    <div class="col-sm-9">
-		      <input type="text" class="form-control " id="name" name="name" value="<%=dto.getName()%>">
-		      <div id="nameMessage"></div>
-		    </div>
-		  </div>
 		  
 		  <div class="form-group row">
 				<label for="loc" class="col-sm-3 col-form-label">주소</label>
 				<div class="col-sm-9">
-					<input type="text" class="form-control " id="loc" name="loc" value="<%=dto.getLoc() %>">
+					<input type="text" class="form-control " id="loc" name="loc" readonly value="<%=dto.getLoc() %>">
 					<div id="locMessage"></div>
 				</div>
 			</div>
@@ -115,7 +149,7 @@
 		  <div class="form-group row">
 		    <label for="phone" class="col-sm-3 col-form-label">전화번호</label>
 		    <div class="col-sm-9">
-		      <input type="tel" class="form-control" id="phone" name="phone" value="<%=dto.getPhone()%>">
+		      <input type="tel" class="form-control" id="phone" name="phone" readonly value="<%=dto.getPhone()%>">
 		      <div id="phoneMessage"></div>
 		    </div>
 		  </div>
@@ -123,7 +157,7 @@
 		  <div class="form-group row">
 				<label for="pet" class="col-sm-3 col-form-label">현재 반려동물</label>
 				<div class="col-sm-9">
-					<input type="text" class="form-control " id="pet" name="pet" value="<%=dto.getCurPet() %>">
+					<input type="text" class="form-control " id="pet" name="pet" readonly value="<%=dto.getCurPet() %>">
 					<div id="petMessage"></div>
 				</div>
 			</div>
@@ -131,26 +165,19 @@
 			<div class="form-group row">
 				<label for="comment" class="col-sm-3 col-form-label">간단 자기소개</label>
 				<div class="col-sm-9">
-					<textarea class="col-sm-12" rows="4" id="comment" name="comment"><%=dto.getComment() %></textarea>
+					<textarea class="col-sm-12" rows="4" id="comment" readonly name="comment" ><%=dto.getComment() %></textarea>
 					<%-- <input type="text" class="form-control " id="comment" name="comment" placeholder="뭐든 좋습니다"> --%>
 					<div id="commentMessage"></div>
 				</div>
 			</div>
 			
 			<div class="form-group row">
-				<label class="col-sm-3 col-form-label">여부</label>
-				<div class="col-sm-1"></div>
-				
-				<div class="form-check col-sm-4">
-					<input class="form-check-input" type="radio" name="type" id="typeAppli" value="applicant" <% if(dto.getType()==0){ %> checked <%} %>>
-					<label class="form-check-label" for="typeAppli"> 일반인 </label>
+				<label for="content" class="col-sm-3 col-form-label">할말</label>
+				<div class="col-sm-9">
+					<textarea class="col-sm-12" rows="4" id="content" readonly name="content"><%=wantedDto.getContent() %></textarea>
+					
+					<div id="contentMessage"></div>
 				</div>
-				
-				<div class="form-check col-sm-4">
-					<input class="form-check-input" type="radio" name="type" id="typeSitter" value="petSitter" <% if(dto.getType()==1){ %> checked <%} %> >
-					<label class="form-check-label" for="typeSitter"> 펫시터 </label>
-				</div>
-
 			</div>
 			
 			<div class="form-group row">
@@ -160,6 +187,8 @@
 					<div id="regDateMessage"></div>
 				</div>
 			</div>
+			
+			
 			
 			<div class="form-group row">
 				<label for="point" class="col-sm-3 col-form-label">평점</label>
@@ -178,29 +207,34 @@
 				
 				</div>
 			</div>
-		  		  
+			
+			  
 		</form>
-		 
-		  
-		  
-		<form name="fImg" id ="fImg" method="post" enctype="multipart/form-data" action="upload.jsp">
+		
+		<form name="fPoint" method="post">
 			<div class="form-group row">
-				<label for="img" class="col-sm-3 col-form-label">사진(최대 10mb)</label>
-				<div class="col-sm-4">
-					<input type="file" class="form-control" id="img" name="img"/>
-					<div id="imgMessage"></div>
+				<label for="regDate" class="col-sm-4 col-form-label">평점등록</label>
+				<div class="form-check form-check-inline col-sm-5">
+			<%
+			for(int i=1; i<=5;i++) {
+				
+			%>
+				  <input class="form-check-input" type="radio" name="point" id="point<%=i %>" value="<%=i%>">
+				  <label class="form-check-label" for="point<%=i %>"> <%=i %> </label>
+			
+			<%
+			}
+			%>
 				</div>
+			
 				<div class="col-sm-2">
-					<button type="button" id="upload" class="btn btn-outline-success">업로드</button>
-				</div>
-				<div class="col-sm-3">
-					<%-- 사진 올리면 반응할 부분 --%>
-					<img id="imgCheck" style="width : 9em; height : 9em" src="<%=dto.getImgPath() %>">
-					<%-- <input type="text" id="test" value=""/> --%>
+					<button type="button" class="btn btn-outline-warning" id="pointRegister" name="pointRegister">등록</button>
 				</div>
 			</div>
 		</form>
-		
+		 
+		 
+		 
 		<input type="hidden" name="checkPwd" id="checkPwd" value="no"/>
 		  
 		<div class="text-right">			

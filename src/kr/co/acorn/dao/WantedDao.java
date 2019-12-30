@@ -68,8 +68,9 @@ public class WantedDao {
 		
 	}
 	
+	// get Max Number
 	public int getMaxNo() {
-		int maxNo = 0;
+		int maxNo = 1;
 		
 		Connection con = null;
 		PreparedStatement ps = null;
@@ -89,6 +90,7 @@ public class WantedDao {
 				maxNo = rs.getInt(++index);
 			}
 			
+			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -98,6 +100,54 @@ public class WantedDao {
 		}
 		
 		return maxNo;
+		
+	}
+	
+	public WantedDto select(int number) {
+		WantedDto dto = null;
+
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+		try {
+			con = ConnLocator.getConnection();
+
+			StringBuffer sql = new StringBuffer();
+
+			sql.append("SELECT w_no, w_title, w_content, W_regDate, w_isEnd, w_id ");
+			sql.append("FROM  p_wanted ");
+			sql.append("WHERE w_no = ? ");
+
+			ps = con.prepareStatement(sql.toString());
+
+			int index = 0;
+			ps.setInt(++index, number);
+
+			rs = ps.executeQuery();
+
+			if (rs.next()) {
+				index = 0;
+				int no = rs.getInt(++index);
+				String title = rs.getString(++index);
+				String content = rs.getString(++index);
+				String regDate = rs.getString(++index);
+				boolean isEnd = rs.getBoolean(++index);
+				String id = rs.getString(++index);
+				
+				dto = new WantedDto(no,title,content,regDate,isEnd,id);
+			}
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			close(con,ps,rs);
+
+		}
+
+		return dto;
+		
 		
 	}
 	
@@ -119,6 +169,7 @@ public class WantedDao {
 			StringBuffer sql = new StringBuffer();
 			sql.append("SELECT w_no, w_title, w_content, w_regDate, w_isEnd, w_id ");
 			sql.append("FROM p_wanted ");
+			sql.append("WHERE w_isEnd = TRUE ");
 			sql.append("ORDER BY w_no DESC ");
 			sql.append("LIMIT ?,?");
 			ps = con.prepareStatement(sql.toString());
@@ -153,6 +204,57 @@ public class WantedDao {
 		return list;
 	}
 	
+	//CRUD - index myPage(my content)
+	public ArrayList<WantedDto> select(int start, int len, String myId) {
+		ArrayList<WantedDto> list = new ArrayList<WantedDto>();
+		
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		
+		try {
+			con = ConnLocator.getConnection();
+			
+			StringBuffer sql = new StringBuffer();
+			sql.append("SELECT w_no, w_title, w_content, w_regDate, w_isEnd, w_id ");
+			sql.append("FROM p_wanted ");
+			sql.append("WHERE w_id = ? ");
+			sql.append("ORDER BY w_no DESC ");
+			sql.append("LIMIT ?,?");
+			ps = con.prepareStatement(sql.toString());
+			
+			int index = 0;
+			ps.setString(++index, myId);
+			ps.setInt(++index, start);
+			ps.setInt(++index, len);
+			
+			rs = ps.executeQuery();
+			
+			while(rs.next()) {
+				index = 0;
+				int no = rs.getInt(++index);
+				String title = rs.getString(++index);
+				String content = rs.getString(++index);
+				String regDate = rs.getString(++index);
+				boolean isEnd = rs.getBoolean(++index);
+				String id = rs.getString(++index);
+				
+				list.add(new WantedDto(no,title,content,regDate,isEnd,id));
+				
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			close(con,ps,rs);
+			
+		}
+		
+		return list;
+	}
+	
+	
 	//insert
 	public boolean insert(WantedDto dto) {
 		boolean isSuccess = false;
@@ -164,7 +266,7 @@ public class WantedDao {
 			con = ConnLocator.getConnection();
 			
 			StringBuffer sql = new StringBuffer();
-			sql.append("INSERT INTO wanted(w_no, w_title, w_content, w_regDate, w_isEnd, w_id ) ");
+			sql.append("INSERT INTO p_wanted(w_no, w_title, w_content, w_regDate, w_isEnd, w_id ) ");
 			sql.append("VALUES(?,?,?,NOW(),?,?	 ) ");
 			
 			ps = con.prepareStatement(sql.toString());
@@ -191,8 +293,6 @@ public class WantedDao {
 		
 		return isSuccess;
 	}
-	
-	
 	
 	
 	

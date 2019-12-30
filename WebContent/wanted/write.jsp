@@ -20,7 +20,7 @@
 	
 	// if not log in, go back
 	if (memberDto == null || memberDto.getType() == 0) {
-		response.sendRedirect("../index.jsp");
+		response.sendRedirect("list.jsp?page="+tempPage);
 		return;
 	}
 	
@@ -58,13 +58,13 @@
 				<%-- normal data --%>
 				<div class="form-group row">
 					<label for="title" class="col-sm-2 col-form-label">제목</label>
-					<div class="col-sm-7">
+					<div class="col-sm-8">
 						<input type="text" class="form-control " id="title" name="title" placeholder="제목을 입력해주세요">
 						<div id="nameMessage"></div>
 					</div>
 					
-					<div class="custom-control custom-switch col-sm-3">
-						<input type="checkbox" class="custom-control-input" id="isEnd" value="checked">
+					<div class="custom-control custom-switch col-sm-2">
+						<input type="checkbox" class="custom-control-input" id="isEnd" name="isEnd" value="checked">
 						<label class="custom-control-label" for="isEnd">활성화</label>
 					</div>
 				</div>
@@ -76,7 +76,7 @@
 					<div class="col-sm-10">
 						<textarea class="col-sm-12" rows="8" id="content" name="content"></textarea>
 						<%-- <input type="text" class="form-control " id="comment" name="comment" placeholder="뭐든 좋습니다"> --%>
-						<div id="commentMessage"></div>
+						<div id="contentMessage"></div>
 					</div>
 				</div>
 
@@ -85,14 +85,6 @@
 				
 
 			</form>
-			
-			
-			
-			
-			<%-- check something --%>
-			<input type="hidden" name="checkId" id="checkId" value="no" />
-			<%-- <input type="hidden" name="checkPwd" id="checkPwd" value="no" /> --%>
-			<input type="hidden" name="checkImg" id="checkImg" value="no" />
 			
 			<div class="text-right">
 				<button type="button" id="goBack" class="btn btn-outline-warning">뒤로가기</button>
@@ -125,10 +117,10 @@
 				return;
 			}
 			
-			if ($("#comment").val().length == 0) {
-				$("#comment").addClass("is-invalid");
-				$("#commentMessage").html("<span class='text-danger'>추가 멘트를 입력해주세요</span>");
-				$("#comment").focus();
+			if ($("#content").val().length == 0) {
+				$("#content").addClass("is-invalid");
+				$("#contentMessage").html("<span class='text-danger'>추가 멘트를 입력해주세요</span>");
+				$("#content").focus();
 				return;
 			}
 			
