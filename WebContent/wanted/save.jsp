@@ -40,12 +40,12 @@
 %>
 		
 <script>
-	alert("글 등록이 완료 되었습니다.<%=temp%>");
+	alert("글 등록이 완료 되었습니다.");
 	location.href="list.jsp";
 </script>
 <% } else { %>
 <script>
-	alert("등록에 실패하셨습니다.<%=temp%>");	
+	alert("등록에 실패하셨습니다.");	
 	history.back(-1);
 </script>
 <% }%>

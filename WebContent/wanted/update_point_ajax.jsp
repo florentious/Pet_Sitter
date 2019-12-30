@@ -17,11 +17,11 @@
 	MemberDao memberDao = MemberDao.getInstance();
 	
 	boolean isSuccess = false;
-	if( dao.insert(dto) && memberDao.updatePoint(sitterId, point )) {
+	if( dao.update(dto) && memberDao.updatePoint(sitterId, point )) {
 		isSuccess = true;
 	}
 	// 이미 있으면 true
-
+	
 	JSONObject obj = new JSONObject();
 	if(isSuccess) {
 		obj.put("result","ok");

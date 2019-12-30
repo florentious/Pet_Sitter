@@ -1,4 +1,7 @@
 
+<%@page import="kr.co.acorn.util.CompareTime"%>
+<%@page import="kr.co.acorn.dto.PointDto"%>
+<%@page import="kr.co.acorn.dao.PointDao"%>
 <%@page import="kr.co.acorn.dto.WantedDto"%>
 <%@page import="kr.co.acorn.dao.WantedDao"%>
 <%@page import="kr.co.acorn.dto.MemberDto"%>
@@ -210,30 +213,44 @@
 			
 			  
 		</form>
+		<%
+			// point 기록시간 확인해서 인터벌 7일기준으로 체크해서 시간이 안되있으면 안뜨는것
+			PointDao pointDao = PointDao.getInstance();
+			String regDate = pointDao.getTime(wantedDto.getId(), memberDto.getId());
+			
+			if(regDate == null || CompareTime.compareTime(CompareTime.changeTime(regDate), CompareTime.getNowTime())) {
+				// compareTime true => second is later
+			
+		%>	
 		
 		<form name="fPoint" method="post">
-			<div class="form-group row">
+			<div class="form-group row" id="pointDiv">
 				<label for="regDate" class="col-sm-4 col-form-label">평점등록</label>
-				<div class="form-check form-check-inline col-sm-5">
-			<%
-			for(int i=1; i<=5;i++) {
-				
-			%>
-				  <input class="form-check-input" type="radio" name="point" id="point<%=i %>" value="<%=i%>">
-				  <label class="form-check-label" for="point<%=i %>"> <%=i %> </label>
 			
-			<%
-			}
-			%>
+			
+				<%
+				for(int i=1; i<=5;i++) {
+					
+				%>
+				<div class="form-check form-check-inline col-sm-1">
+				  <input class="form-check-input" type="radio" name="pointReg" id="pointReg" value="<%=i%>">
+				  <label class="form-check-label" for="pointReg"> <%=i %>   </label>
 				</div>
+			
+				<%
+				}
+				%>
 			
 				<div class="col-sm-2">
 					<button type="button" class="btn btn-outline-warning" id="pointRegister" name="pointRegister">등록</button>
 				</div>
+			
 			</div>
 		</form>
 		 
-		 
+		<%
+			}
+		%>
 		 
 		<input type="hidden" name="checkPwd" id="checkPwd" value="no"/>
 		  
@@ -258,6 +275,74 @@
 <script>
 	$(function() {
 		$("#beforePassword").focus();
+		
+		/* point등록 regeister */
+		$("#pointRegister").click(function(){
+			<%
+			if(regDate == null) {
+			%>
+			
+			$.ajax({
+				type : "GET",
+				url : 'insert_point_ajax.jsp?sitterId=<%=wantedDto.getId() %>&applicId=<%=memberDto.getId() %>&point=' + $("input:radio[name='pointReg']:checked").val(),
+				dataType : 'json',
+				error : function(){
+					//out- json error
+				},
+				
+				success : function(json) {
+					//json => {"result" : "ok or fail"}
+					
+					// success insert db data->ok
+					if(json.result == "ok") {
+						// 등록됬다고 표기
+						$("#pointDiv").html("<label for='regDate' class='col-sm-4 col-form-label'>평점등록</label> <div class='col-sm-8'> 등록이 완료되었습니다</div>");
+						<% 
+						// 실제 대상 멤버에 점수 반영하는 코드
+						%>
+					} else {
+						// out - db error
+						
+						
+					}
+				}
+			});
+			
+			
+			<%
+			} else {
+	
+			%>
+			
+			$.ajax({
+				type : "GET",
+				url : 'update_point_ajax.jsp?sitterId=<%=wantedDto.getId() %>&applicId=<%=memberDto.getId() %>&point='+ $("input:radio[name='pointReg']:checked").val(),
+				dataType : 'json',
+				error : function(){
+					//out- json error
+				},
+				
+				success : function(json) {
+					//json => {"result" : "ok or fail"}
+					
+					// success insert db data->ok
+					if(json.result == "ok") {
+						$("#pointDiv").html("<label for='regDate' class='col-sm-4 col-form-label'>평점등록</label> <div class='col-sm-8'> 등록이 완료되었습니다</div>");
+						
+					} else {
+						// out - db error
+						
+						
+					}
+				}
+			});
+			
+			
+			<%
+			}
+			%>
+		});	
+		
 		
 		
 		$("#upload").click(function(){

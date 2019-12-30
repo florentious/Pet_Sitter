@@ -107,6 +107,44 @@ public class MemberDao {
 		return isSuccess;
 	}
 	
+	public boolean updatePoint(String id, int point) {
+		boolean isSuccess = false;
+		
+		Connection con = null;
+		PreparedStatement ps = null;
+		
+		try {
+			con = ConnLocator.getConnection();
+			
+			StringBuffer sql = new StringBuffer();
+			
+			sql.append("UPDATE p_member ");
+			sql.append("SET m_point = m_point + ? , m_point_count = m_point_count+1 ");
+			sql.append("WHERE m_id = ?");
+			
+			ps = con.prepareStatement(sql.toString());
+			int index = 0;
+			ps.setInt(++index, point);
+			ps.setString(++index, id);
+			
+			
+			ps.executeUpdate();
+			
+			isSuccess = true;			
+			
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			close(con,ps,null);
+		}
+		
+		
+		return isSuccess;
+	}
+	
+	
 	
 	// use log-in session
 	public MemberDto getMember(MemberDto dto) {

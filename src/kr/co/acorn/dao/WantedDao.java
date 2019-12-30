@@ -70,7 +70,7 @@ public class WantedDao {
 	
 	// get Max Number
 	public int getMaxNo() {
-		int maxNo = 1;
+		int maxNo = 0;
 		
 		Connection con = null;
 		PreparedStatement ps = null;
@@ -88,6 +88,10 @@ public class WantedDao {
 			if(rs.next()) {
 				int index = 0;
 				maxNo = rs.getInt(++index);
+			}
+			
+			if(maxNo ==0) {
+				maxNo = 1;
 			}
 			
 			
