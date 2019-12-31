@@ -144,6 +144,45 @@ public class MemberDao {
 		return isSuccess;
 	}
 	
+	public String getImgPath(String id) {
+		String imgPath = null;
+
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+		try {
+			con = ConnLocator.getConnection();
+
+			StringBuffer sql = new StringBuffer();
+
+			sql.append("SELECT m_img_path ");
+			sql.append("FROM p_member ");
+			sql.append("WHERE m_id = ? ");
+
+			ps = con.prepareStatement(sql.toString());
+
+			int index = 0;
+			ps.setString(++index, id);
+
+			rs = ps.executeQuery();
+
+			if (rs.next()) {
+				index = 0;
+				imgPath = rs.getString(++index);
+			}
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			close(con,ps,rs);
+
+		}
+
+		return imgPath;
+	}
+	
 	
 	
 	// use log-in session

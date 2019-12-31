@@ -117,7 +117,7 @@ public class PointDao {
 			con = ConnLocator.getConnection();
 			StringBuffer sql = new StringBuffer();
 			sql.append("UPDATE p_point_date ");
-			sql.append("SET regDate = DATE_ADD(NOW(), INTERVAL 7 DAY) ");
+			sql.append("SET p_regDate = DATE_ADD(NOW(), INTERVAL 7 DAY) ");
 			sql.append("WHERE p_sitter_id = ? AND p_applic_id = ? ");
 			
 			ps = con.prepareStatement(sql.toString());

@@ -68,6 +68,42 @@ public class WantedDao {
 		
 	}
 	
+	//getTotalMypage
+	public int getTotalRows(String id) {
+		int totalRows = 0;
+		
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		
+		try {
+			con = ConnLocator.getConnection();
+			
+			StringBuffer sql = new StringBuffer();
+			sql.append("SELECT COUNT(w_no) FROM p_wanted WHERE w_id = ?");
+			ps = con.prepareStatement(sql.toString());
+			int index = 0;
+			ps.setString(++index, id);
+			
+			rs = ps.executeQuery();
+			
+			if(rs.next()) {
+				index = 0;
+				totalRows = rs.getInt(++index);
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			close(con, ps, rs);
+			
+		}
+		
+		return totalRows;
+		
+	}
+	
 	// get Max Number
 	public int getMaxNo() {
 		int maxNo = 0;
@@ -298,6 +334,76 @@ public class WantedDao {
 		return isSuccess;
 	}
 	
+	//delete
+	public boolean delete(int no) {
+		boolean isSuccess = false;
+		
+		Connection con = null;
+		PreparedStatement ps = null;
+		
+		try {
+			con = ConnLocator.getConnection();
+			StringBuffer sql = new StringBuffer();
+			sql.append("DELETE FROM p_wanted ");
+			sql.append("WHERE w_no = ? ");
+			ps = con.prepareStatement(sql.toString());
+			
+			int index=0;
+			ps.setInt(++index, no);
+			
+			ps.executeUpdate();
+			
+			isSuccess = true;
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			close(con,ps,null);
+		}
+		
+		return isSuccess;
+	}
+	
+	//update
+	public boolean update(WantedDto dto) {
+		boolean isSuccess = false;
+		
+		Connection con = null;
+		PreparedStatement ps = null;
+		
+		try {
+			con = ConnLocator.getConnection();
+			
+			StringBuffer sql = new StringBuffer();
+			sql.append("UPDATE p_wanted ");
+			sql.append("SET w_title=?, w_content=?, w_isEnd =? ");
+			sql.append("WHERE w_no = ?");
+			
+			ps = con.prepareStatement(sql.toString());
+			
+			int index=0;
+			ps.setString(++index, dto.getTitle());
+			ps.setString(++index, dto.getContent());
+			ps.setBoolean(++index, dto.getIsEnd());
+			ps.setInt(++index, dto.getNo());
+			
+			ps.executeUpdate();
+			
+			isSuccess = true;
+			
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			close(con,ps,null);
+		}
+		
+		
+		
+		return isSuccess;
+	}
 	
 	
 	

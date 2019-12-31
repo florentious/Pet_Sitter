@@ -45,7 +45,7 @@
 	
 	WantedDao dao = WantedDao.getInstance(); 
 	
-	totalRows = dao.getTotalRows();
+	totalRows = dao.getTotalRows(memberDto.getId());
 	
 	
 	totalPage = totalRows % len ==0 ? totalRows/len : totalRows/len +1;
@@ -122,7 +122,7 @@
 		      <th scope="col">제목</th>
 		      <th scope="col">작성자</th>
 		      <th scope="col">등록일</th>
-		      <th scope="col">예약하기</th>     
+		      <th scope="col">예약</th>     
 		    </tr>
 		  </thead>
 		  <tbody>
@@ -140,7 +140,7 @@
 			      <td><a href="view.jsp?page=<%=cPage%>&no=<%=dto.getNo() %>"><%=dto.getTitle() %></a></td>
 			      <td><%=dto.getId() %></td>
 			      <td><%=dto.getRegDate() %></td>
-			      <td><button class="btn btn-outline-success">예약하기</button></td>
+			      <td><button class="btn btn-outline-success">예약</button></td>
 			    </tr>
 		    </form>
 		    
@@ -187,11 +187,7 @@
 				</ul>
 			</nav>
 
-			<% //if(memberDto.getType() == 1 ) { %>
-			<div class="text-right">
-				<a href="write.jsp?page=<%=cPage %>" class="btn btn-outline-success">등록하기</a>
-			</div>
-			<% //} %>
+			
 		
 			
 		</div>
