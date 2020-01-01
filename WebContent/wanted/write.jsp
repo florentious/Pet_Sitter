@@ -74,7 +74,7 @@
 				<div class="form-group row">
 					<label for="content" class="col-sm-2 col-form-label">추가내용</label>
 					<div class="col-sm-10">
-						<textarea class="col-sm-12" rows="8" id="content" name="content"></textarea>
+						<textarea class="form-control col-sm-12" rows="8" id="content" name="content"></textarea>
 						<%-- <input type="text" class="form-control " id="comment" name="comment" placeholder="뭐든 좋습니다"> --%>
 						<div id="contentMessage"></div>
 					</div>

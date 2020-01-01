@@ -116,7 +116,7 @@ public class WantedDao {
 			con = ConnLocator.getConnection();
 			
 			StringBuffer sql = new StringBuffer();
-			sql.append("SELECT MAX(w_no)+1 FROM p_wanted ");
+			sql.append("SELECT IFNULL(MAX(w_no)+1,1) FROM p_wanted ");
 			ps = con.prepareStatement(sql.toString());
 			
 			rs = ps.executeQuery();
@@ -124,10 +124,6 @@ public class WantedDao {
 			if(rs.next()) {
 				int index = 0;
 				maxNo = rs.getInt(++index);
-			}
-			
-			if(maxNo ==0) {
-				maxNo = 1;
 			}
 			
 			

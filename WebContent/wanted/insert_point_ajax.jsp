@@ -1,3 +1,4 @@
+<%@page import="kr.co.acorn.dto.MemberDto"%>
 <%@page import="kr.co.acorn.dao.MemberDao"%>
 <%@page import="kr.co.acorn.dto.PointDto"%>
 <%@page import="kr.co.acorn.dao.PointDao"%>
@@ -21,10 +22,21 @@
 		isSuccess = true;
 	}
 	// 이미 있으면 true
-
+	
+	MemberDto memberDto = memberDao.select(sitterId);
+	String avgPoint = String.format("%.1f", (double)memberDto.getPoint() / (double)memberDto.getPointCount());
+	String pointCountOver = null;
+	if(memberDto.getPointCount() <5) {
+		pointCountOver = "no";
+	} else {
+		pointCountOver = "yes";
+	}
+	
 	JSONObject obj = new JSONObject();
 	if(isSuccess) {
 		obj.put("result","ok");
+		obj.put("avgPoint",avgPoint);
+		obj.put("pointCountOver",pointCountOver);
 	}else {
 		obj.put("result","fail");
 	}

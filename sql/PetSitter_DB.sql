@@ -45,14 +45,25 @@ PRIMARY KEY(p_sitter_id, p_applic_id)
 
 );
 
+CREATE TABLE p_comment(
+c_no INT NOT NULL PRIMARY key,
+c_wanted_no INT NOT null,
+c_member_id VARCHAR(30) NOT NULL,
+c_comment VARCHAR(256),
+c_regdate DATETIME,
+
+FOREIGN KEY (c_wanted_no) REFERENCES p_wanted(w_no),
+FOREIGN KEY (c_member_id) REFERENCES p_member(m_id)
+
+);
+
+
+SELECT * FROM p_comment;
 
 SELECT * FROM p_member;
 
 SELECT * FROM p_point_date;
 
-UPDATE p_member 
-SET m_point = m_point + 5 , m_point_count = m_point_count + 1
-WHERE m_id='테스터1'
 
 DELETE FROM p_point_date;
 

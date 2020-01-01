@@ -111,7 +111,7 @@
 				<div class="form-group row">
 					<label for="comment" class="col-sm-3 col-form-label">간단 자기소개</label>
 					<div class="col-sm-9">
-						<textarea class="col-sm-12" rows="4" id="comment" name="comment"></textarea>
+						<textarea class="form-control col-sm-12" rows="4" id="comment" name="comment"></textarea>
 						<%-- <input type="text" class="form-control " id="comment" name="comment" placeholder="뭐든 좋습니다"> --%>
 						<div id="commentMessage"></div>
 					</div>

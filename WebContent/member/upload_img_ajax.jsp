@@ -17,9 +17,8 @@
 	path += File.separator + year + File.separator + month;
 	
 	String contextPath = request.getContextPath();
-	 
-	 
-	//String path = "D:/dev/workspace/Pet_Sitter/img/";
+	
+	
 	File f = new File(path);
 	if(!f.exists()) {
 		f.mkdirs();
