@@ -57,6 +57,22 @@ FOREIGN KEY (c_member_id) REFERENCES p_member(m_id)
 
 );
 
+CREATE TABLE p_book(
+b_no INT PRIMARY KEY,
+b_sitterId VARCHAR(30) NOT NULL, 
+b_applicId VARCHAR(30) NOT NULL,
+b_content VARCHAR(256),
+
+b_regDate DATETIME,
+b_bookStart DATETIME,
+b_bookEnd DATETIME,
+b_isConfirm BOOLEAN,
+
+FOREIGN KEY (b_sitterId) REFERENCES p_member(m_id),
+FOREIGN KEY (b_applicId) REFERENCES p_member(m_id),
+
+);
+
 
 SELECT * FROM p_comment;
 
