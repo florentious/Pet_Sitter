@@ -1,4 +1,5 @@
 
+<%@page import="kr.co.acorn.dao.CommentDao"%>
 <%@page import="kr.co.acorn.dto.MemberDto"%>
 <%@page import="kr.co.acorn.dao.WantedDao"%>
 <%@ page pageEncoding="utf-8" %>
@@ -23,8 +24,13 @@
 	}
 	
 	WantedDao dao = WantedDao.getInstance();
+	CommentDao commentDao = CommentDao.getInstance();
 	
-	boolean isSuccess = dao.delete(cNo);
+	boolean isSuccess = false;
+	if(commentDao.deleteWantedNo(cNo) && dao.delete(cNo)) {
+		isSuccess = true;	
+	}
+	
 	
 	if(isSuccess) {
 	

@@ -6,6 +6,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
 import kr.co.acorn.dto.CommentDto;
 import kr.co.acorn.util.ConnLocator;
 
@@ -192,6 +195,59 @@ public class CommentDao {
 		return list;
 	}
 	
+	public JSONArray selectJson() {
+		JSONArray item = new JSONArray();	// JSONObject ArrayList
+		JSONObject obj = null;
+		
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		
+		try {
+			con = ConnLocator.getConnection();
+			
+			StringBuffer sql = new StringBuffer();
+			sql.append("SELECT c_no, c_wanted_no, c_member_id, c_comment, c_regdate ");
+			sql.append("FROM p_comment ");
+			sql.append("ORDER BY c_regdate DESC ");
+			
+			ps = con.prepareStatement(sql.toString());
+			
+			rs = ps.executeQuery();
+			while(rs.next()) {
+				int index = 0;
+				int no = rs.getInt(++index);
+				int wantedNo = rs.getInt(++index);
+				String id = rs.getString(++index);
+				String comment = rs.getString(++index);
+				String regDate = rs.getString(++index);
+				
+				// item에 넣어서확인
+				obj = new JSONObject();
+				obj.put("no", no);
+				obj.put("wantedNo", wantedNo);
+				obj.put("id", id);
+				obj.put("comment", comment);
+				obj.put("regDate", regDate);
+				
+				item.add(obj);
+				
+			}
+			
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			close(con,ps,rs);
+		}
+		
+		
+		
+		return item;
+	}
+	
+	
 	
 	//insert
 	public boolean insert(CommentDto dto) {
@@ -266,6 +322,7 @@ public class CommentDao {
 		
 	}
 	
+	// 댓글번호 기준 삭제
 	public boolean delete(int no) {
 		boolean isSuccess = false;
 		
@@ -298,6 +355,42 @@ public class CommentDao {
 		
 		return isSuccess;
 	}
+	
+	// 글번호 기준 삭제(글삭제용
+	public boolean deleteWantedNo(int wantedNo) {
+		boolean isSuccess = false;
+		
+		Connection con = null;
+		PreparedStatement ps = null;
+		
+		try {
+			con = ConnLocator.getConnection();
+			
+			StringBuffer sql = new StringBuffer();
+			sql.append("DELETE FROM p_comment ");
+			sql.append("WHERE c_wanted_no=? ");
+			
+			ps = con.prepareStatement(sql.toString());
+			
+			int index=0;
+			ps.setInt(++index, wantedNo);
+			
+			ps.executeUpdate();
+			
+			isSuccess = true;
+			
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			close(con,ps,null);
+		}
+		
+		return isSuccess;
+	}
+	
+	
 	
 	
 }

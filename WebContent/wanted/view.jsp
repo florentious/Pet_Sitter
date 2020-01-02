@@ -258,8 +258,8 @@
 			<%
 			if(memberDto.getId().equals(wantedDto.getId())) {
 			%>
-			<button type="button" id="updateMember" class="btn btn-outline-success">수정</button>
-			<button type="button" id="deleteMember" class="btn btn-outline-danger">삭제</button>
+			<button type="button" id="updateWanted" class="btn btn-outline-success">수정</button>
+			<button type="button" id="deleteWanted" class="btn btn-outline-danger">삭제</button>
 			
 			<%
 			}
@@ -288,7 +288,7 @@
 		
 		
 		%>
-        <table class="table table-sm">
+        <table class="table table-sm" id="commentTable">
        		<colgroup>
         	</colgroup>
         	<thead>
@@ -308,7 +308,20 @@
         				<div class="form-group row">
         					<div class="col-sm-2"><%=commentDtoList.getId() %></div>
         					<div class="col-sm-6"><%=commentDtoList.getRegDate() %></div>
-        					<div class="col-sm-4"><%-- update, delete --%></div>
+        					<div class="col-sm-4">
+        					<%
+        					if(commentDtoList.getId().equals(memberDto.getId())) {
+        						
+        					
+        					%>
+        						<a type="button" class="updateComment" href="#" >수정</a>
+        						<a type="button" class="deleteComment" href="#" >삭제</a>
+        						
+        					<%
+        					}
+        					%>
+        						<input type="hidden" id="commentNo" name="commentNo" value="<%=commentDtoList.getNo() %>">
+							</div>
 							
 							<div class="col-sm-1"></div>
         					<textarea class="form-control col-sm-10" rows="3" id="comment" <%if(commentDtoList.getId().equals(memberDto.getId()) == false) { %>readonly <%} %>name="comment" ><%=commentDtoList.getComment() %></textarea>
@@ -439,13 +452,191 @@
 				success : function(json) {
 					if(json.result == "ok") {
 						// db insert
-						<%
-						commentList = commentDao.select();
-						int newTotalRows = commentDao.getTotalRows();
 						
-						%>
 						// 여기 수정봐야함
-						$("#commentTotal").html("댓글 수 : <%=newTotalRows %>");
+						// 다시 값을 받는것이 불가능하니 값을 땡겨와야할듯 JSON.stringify
+						// totalRows 표기
+						$("#commentTotal").html("댓글 수 : " + json.item.length);
+						
+						$("#commentTable>tbody").html(''); // 그전에 있던거 초기화(추가형태로하면 힘드니까)
+						
+						// insert가 되면 절대 사이즈가 0이 아닐테니
+						for(let i=0;i<json.item.length;i++) {
+							let html = "";
+							html += '<tr><td>';
+							html += '<div class="form-group row">';
+        					html += '<div class="col-sm-2">'+json.item[i].id +'</div>';
+        					html += '<div class="col-sm-6">'+json.item[i].regDate + '</div>';
+        					html += '<div class="col-sm-4">';
+        					if(json.item[i].id == "<%=memberDto.getId() %>") {
+	        					html += '<a type="button" class="updateComment" href="#" > 수정  </a>';
+	        					html += '<a type="button" class="deleteComment" href="#" > 삭제  </a>';        						
+        					}
+        					html += '<input type="hidden" id="commentNo" name="commentNo" value="'+json.item[i].no +'">';
+        					html += '</div>';
+							html += '<div class="col-sm-1"></div>';
+							
+							if(json.item[i].id == "<%=memberDto.getId() %>") {
+	        					html += '<textarea class="form-control col-sm-10" rows="3" id="comment" name="comment" >'+ json.item[i].comment +'</textarea>';								
+							} else {
+	        					html += '<textarea class="form-control col-sm-10" rows="3" id="comment" readonly name="comment" >'+ json.item[i].comment +'</textarea>';
+								
+							}
+							
+        					html += '</div>';
+							html += '</td></tr>';
+							
+							$("#commentTable>tbody").append(html);
+							
+						}
+						
+						$("#commentTextArea").val('');
+						$("#commentTextArea").focus();
+					}else {
+						// db fail
+						
+					}
+				}
+				
+			});
+			
+		});
+		
+		// comment update 눌렀을때
+		$(document).on('click','.updateComment',function(){
+			// 클릭대상 글번호값
+			//$(this).parent().children('input').val();
+			// textarea 위치
+			//$(this).parent().parent().children('textarea').val();
+			
+			if ($(this).parent().parent().children('textarea').val().length == 0 || $(this).parent().parent().children('textarea').val() == null) {
+				return;
+			}
+			
+			// ajax
+			$.ajax({
+				type : 'post',
+				url : 'update_comment_ajax.jsp',
+				data : { no:$(this).parent().children('input').val(),
+					wantedNo : "<%=wantedDto.getNo() %>",
+					commentId : "<%=memberDto.getId() %>",
+					commentTextArea : $(this).parent().parent().children('textarea').val()},
+				dataType : 'json',
+				error : function() {
+					
+				},
+				success : function(json) {
+					if(json.result == "ok") {
+						// db insert
+						
+						// 여기 수정봐야함
+						// 다시 값을 받는것이 불가능하니 값을 땡겨와야할듯 JSON.stringify
+						// totalRows 표기
+						$("#commentTotal").html("댓글 수 : " + json.item.length);
+						
+						$("#commentTable>tbody").html(''); // 그전에 있던거 초기화(추가형태로하면 힘드니까)
+						
+						// insert가 되면 절대 사이즈가 0이 아닐테니
+						for(let i=0;i<json.item.length;i++) {
+							let html = "";
+							html += '<tr><td>';
+							html += '<div class="form-group row">';
+        					html += '<div class="col-sm-2">'+json.item[i].id +'</div>';
+        					html += '<div class="col-sm-6">'+json.item[i].regDate + '</div>';
+        					html += '<div class="col-sm-4">';
+        					if(json.item[i].id == "<%=memberDto.getId() %>") {
+	        					html += '<a type="button" class="updateComment" href="#" > 수정  </a>';
+	        					html += '<a type="button" class="deleteComment" href="#" > 삭제  </a>';        						
+        					}
+        					html += '<input type="hidden" id="commentNo" name="commentNo" value="'+json.item[i].no +'">';
+        					html += '</div>';
+							html += '<div class="col-sm-1"></div>';
+							
+							if(json.item[i].id == "<%=memberDto.getId() %>") {
+	        					html += '<textarea class="form-control col-sm-10" rows="3" id="comment" name="comment" >'+ json.item[i].comment +'</textarea>';								
+							} else {
+	        					html += '<textarea class="form-control col-sm-10" rows="3" id="comment" readonly name="comment" >'+ json.item[i].comment +'</textarea>';
+								
+							}
+							
+        					html += '</div>';
+							html += '</td></tr>';
+							
+							$("#commentTable>tbody").append(html);
+							
+						}
+						$("#commentTextArea").focus();
+						
+					}else {
+						// db fail
+						
+					}
+				}
+				
+			});
+			
+		});
+		
+		$(document).on('click','.deleteComment',function(){
+			// 클릭대상 글번호값
+			//$(this).parent().children('input').val();
+			// textarea 위치
+			//$(this).parent().parent().children('textarea').val();
+			
+			if ($(this).parent().parent().children('textarea').val().length == 0 || $(this).parent().parent().children('textarea').val() == null) {
+				return;
+			}
+			
+			// ajax
+			$.ajax({
+				type : 'post',
+				url : 'delete_comment_ajax.jsp',
+				data : { no:$(this).parent().children('input').val()},
+				dataType : 'json',
+				error : function() {
+					
+				},
+				success : function(json) {
+					if(json.result == "ok") {
+						// db insert
+						
+						// 여기 수정봐야함
+						// 다시 값을 받는것이 불가능하니 값을 땡겨와야할듯 JSON.stringify
+						// totalRows 표기
+						$("#commentTotal").html("댓글 수 : " + json.item.length);
+						
+						$("#commentTable>tbody").html(''); // 그전에 있던거 초기화(추가형태로하면 힘드니까)
+						
+						// insert가 되면 절대 사이즈가 0이 아닐테니
+						for(let i=0;i<json.item.length;i++) {
+							let html = "";
+							html += '<tr><td>';
+							html += '<div class="form-group row">';
+        					html += '<div class="col-sm-2">'+json.item[i].id +'</div>';
+        					html += '<div class="col-sm-6">'+json.item[i].regDate + '</div>';
+        					html += '<div class="col-sm-4">';
+        					if(json.item[i].id == "<%=memberDto.getId() %>") {
+	        					html += '<a type="button" class="updateComment" href="#" > 수정  </a>';
+	        					html += '<a type="button" class="deleteComment" href="#" > 삭제  </a>';        						
+        					}
+        					html += '<input type="hidden" id="commentNo" name="commentNo" value="'+json.item[i].no +'">';
+        					html += '</div>';
+							html += '<div class="col-sm-1"></div>';
+							
+							if(json.item[i].id == "<%=memberDto.getId() %>") {
+	        					html += '<textarea class="form-control col-sm-10" rows="3" id="comment" name="comment" >'+ json.item[i].comment +'</textarea>';								
+							} else {
+	        					html += '<textarea class="form-control col-sm-10" rows="3" id="comment" readonly name="comment" >'+ json.item[i].comment +'</textarea>';
+								
+							}
+							
+        					html += '</div>';
+							html += '</td></tr>';
+							
+							$("#commentTable>tbody").append(html);
+							
+						}
+						$("#commentTextArea").focus();
 						
 					}else {
 						// db fail
@@ -459,8 +650,9 @@
 		
 		
 		
+		
 		/* update start */
-		$("#updateMember").click(function() {
+		$("#updateWanted").click(function() {
 			// 자바 스크립트 유효성 검사
 			
 			// 제목 수정시에
@@ -487,9 +679,9 @@
 		/* update end */
 		
 		/* delete start */
-		$("#deleteMember").click(function() {
+		$("#deleteWanted").click(function() {
 			
-			
+			// 안에 댓글 다 삭제하고 삭제해야되나?
 			f.action ="delete.jsp?page=<%=cPage%>";
 			
 			f.submit();

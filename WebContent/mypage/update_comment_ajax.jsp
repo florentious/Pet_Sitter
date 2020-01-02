@@ -7,17 +7,18 @@
 <%
 	request.setCharacterEncoding("utf-8");
 
+	String tempNo = request.getParameter("no");
 	String tempWantedNo = request.getParameter("wantedNo");
 	String id = request.getParameter("commentId");
 	String comment = request.getParameter("commentTextArea");
 	
 	int wantedNo = Integer.parseInt(tempWantedNo);
+	int no = Integer.parseInt(tempNo);
 	
 	CommentDao commentDao = CommentDao.getInstance();
-	int no = commentDao.getMaxNo();
 	CommentDto commentDto = new CommentDto(no,wantedNo,id,comment,null);
 	
-	boolean isSuccess = commentDao.insert(commentDto);
+	boolean isSuccess = commentDao.update(commentDto);
 		
 	// jsonArray 형태로만들어서 보냄(Dao에서도 JSON으로 코딩해야함)
 	JSONArray item = commentDao.selectJson();
