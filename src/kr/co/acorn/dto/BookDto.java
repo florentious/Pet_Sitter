@@ -2,7 +2,7 @@ package kr.co.acorn.dto;
 
 public class BookDto {
 	private int no;
-	private String sitterId;
+	private int wantedNo;
 	private String applicId;
 	private String content;
 	private String regDate;
@@ -16,11 +16,11 @@ public class BookDto {
 	public void setNo(int no) {
 		this.no = no;
 	}
-	public String getSitterId() {
-		return sitterId;
+	public int getWantedNo() {
+		return wantedNo;
 	}
-	public void setSitterId(String sitterId) {
-		this.sitterId = sitterId;
+	public void setWantedNo(int wantedNo) {
+		this.wantedNo = wantedNo;
 	}
 	public String getApplicId() {
 		return applicId;
@@ -52,18 +52,18 @@ public class BookDto {
 	public void setBookEnd(String bookEnd) {
 		this.bookEnd = bookEnd;
 	}
-	public boolean isConfirm() {
+	public boolean getIsConfirm() {
 		return isConfirm;
 	}
-	public void setConfirm(boolean isConfirm) {
+	public void setIsConfirm(boolean isConfirm) {
 		this.isConfirm = isConfirm;
 	}
 	
-	public BookDto(int no, String sitterId, String applicId, String content, String regDate, String bookStart,
+	public BookDto(int no, int wantedNo, String applicId, String content, String regDate, String bookStart,
 			String bookEnd, boolean isConfirm) {
 		super();
 		this.no = no;
-		this.sitterId = sitterId;
+		this.wantedNo = wantedNo;
 		this.applicId = applicId;
 		this.content = content;
 		this.regDate = regDate;

@@ -6,6 +6,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
 import kr.co.acorn.dto.BookDto;
 import kr.co.acorn.util.ConnLocator;
 
@@ -78,7 +81,7 @@ public class BookDao {
 			con = ConnLocator.getConnection();
 			
 			StringBuffer sql = new StringBuffer();
-			sql.append("SELECT b_no, b_sitterId, b_applicId, b_content, b_regDate, b_bookStart, b_bookEnd, b_isConfirm ");
+			sql.append("SELECT b_no, b_wantedNo, b_applicId, b_content, b_regDate, b_bookStart, b_bookEnd, b_isConfirm ");
 			sql.append("FROM p_book ");
 			sql.append("ORDER BY b_no DESC ");
 			
@@ -89,7 +92,7 @@ public class BookDao {
 			while(rs.next()) {
 				int index = 0;
 				int no = rs.getInt(++index);
-				String sitterId = rs.getString(++index);
+				int wantedNo = rs.getInt(++index);				
 				String applicId = rs.getString(++index);
 				String content = rs.getString(++index);
 				String regDate =rs.getString(++index);
@@ -97,7 +100,7 @@ public class BookDao {
 				String bookEnd =rs.getString(++index);
 				Boolean isConfirm = rs.getBoolean(++index);
 				
-				BookDto dto = new BookDto(no, sitterId, applicId, content, regDate, bookStart, bookEnd, isConfirm);
+				BookDto dto = new BookDto(no, wantedNo, applicId, content, regDate, bookStart, bookEnd, isConfirm);
 				
 				list.add(dto);
 				
@@ -110,6 +113,102 @@ public class BookDao {
 		}
 		
 		return list;
+	}
+	
+	public JSONArray selectJson(int wantedNumber) {
+		JSONArray list = new JSONArray();
+		JSONObject obj = null;
+		
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		
+		try {
+			con = ConnLocator.getConnection();
+			
+			StringBuffer sql = new StringBuffer();
+			sql.append("SELECT b_no, b_wantedNo, b_applicId, b_content, b_regDate, b_bookStart, b_bookEnd, b_isConfirm ");
+			sql.append("FROM p_book ");
+			sql.append("WHERE b_wantedNo = ? ");
+			sql.append("ORDER BY b_no DESC ");
+			ps = con.prepareStatement(sql.toString());
+			int index = 0;
+			ps.setInt(++index, wantedNumber);
+			
+			rs = ps.executeQuery();
+			
+			while(rs.next()) {
+				index = 0;
+				int no = rs.getInt(++index);
+				int wantedNo = rs.getInt(++index);				
+				String applicId = rs.getString(++index);
+				String content = rs.getString(++index);
+				String regDate =rs.getString(++index);
+				String bookStart =rs.getString(++index);
+				String bookEnd =rs.getString(++index);
+				Boolean isConfirm = rs.getBoolean(++index);
+				
+				obj = new JSONObject();
+				
+				obj.put("no", no);
+				obj.put("wantedNo", wantedNo);
+				obj.put("applicId", applicId);
+				obj.put("content", content);
+				obj.put("regDate", regDate);
+				obj.put("bookStart", bookStart);
+				obj.put("bookEnd", bookEnd);
+				obj.put("isConfirm", isConfirm);
+				
+				list.add(obj);
+				
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			close(con,ps,rs);
+		}
+		
+		return list;
+	}
+	
+	
+	public boolean insert(BookDto dto) {
+		boolean isSuccess = false;
+		
+		Connection con = null;
+		PreparedStatement ps = null;
+		
+		try {
+			con = ConnLocator.getConnection();
+			StringBuffer sql = new StringBuffer();
+			sql.append("INSERT INTO p_book(b_no, b_wantedNo, b_applicId, b_content, b_regDate, b_bookStart, b_bookEnd, b_isConfirm) ");
+			sql.append("VALUES(?,?,?,?,NOW(),?,?,?) ");
+			
+			ps = con.prepareStatement(sql.toString());
+			
+			int index=0;
+			ps.setInt(++index, dto.getNo());
+			ps.setInt(++index, dto.getWantedNo());
+			ps.setString(++index, dto.getApplicId());
+			ps.setString(++index, dto.getContent());
+			ps.setString(++index, dto.getRegDate());
+			ps.setString(++index, dto.getBookStart());
+			ps.setString(++index, dto.getBookEnd());
+			ps.setBoolean(++index, dto.getIsConfirm());
+			
+			ps.executeUpdate();
+			
+			isSuccess = true;
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			close(con,ps,null);
+		}
+		
+		return isSuccess;
 	}
 	
 	

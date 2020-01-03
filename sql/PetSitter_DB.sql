@@ -69,7 +69,7 @@ b_bookEnd DATETIME,
 b_isConfirm BOOLEAN,
 
 FOREIGN KEY (b_sitterId) REFERENCES p_member(m_id),
-FOREIGN KEY (b_applicId) REFERENCES p_member(m_id),
+FOREIGN KEY (b_applicId) REFERENCES p_member(m_id)
 
 );
 
