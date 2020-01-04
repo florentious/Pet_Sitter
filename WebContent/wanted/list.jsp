@@ -393,8 +393,8 @@
 		$.ajax({
 			type : 'post',
 			url : 'insert_book_ajax.jsp',
-			// 찾아서 하자
-			data : {wantedNo : $(this).parent().prev().prev().prev().prev().text()},
+			// 넘겨야할 것 : bookStart, bookEnd, comment, wantedNo, applicId
+			data : {},
 			datatype : 'json',
 			error : function(){
 			},

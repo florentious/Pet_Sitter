@@ -16,6 +16,7 @@ m_point_count INT
 );
 
 CREATE TABLE notice(
+
 n_no INT PRIMARY KEY,
 n_regdate DATETIME,
 n_title varchar(30) NOT NULL,
@@ -39,11 +40,11 @@ foreign KEY (w_id) REFERENCES p_member(m_id)
 CREATE TABLE p_point_date(
 p_sitter_id VARCHAR(30) NOT null,
 p_applic_id VARCHAR(30) NOT null,
-p_regDate DATETIME NOT NULL,
-
+p_regDate DATETIME,
 PRIMARY KEY(p_sitter_id, p_applic_id)
 
-);
+
+)
 
 CREATE TABLE p_comment(
 c_no INT NOT NULL PRIMARY key,
@@ -59,7 +60,7 @@ FOREIGN KEY (c_member_id) REFERENCES p_member(m_id)
 
 CREATE TABLE p_book(
 b_no INT PRIMARY KEY,
-b_sitterId VARCHAR(30) NOT NULL, 
+b_wantedNo INT NOT NULL, 
 b_applicId VARCHAR(30) NOT NULL,
 b_content VARCHAR(256),
 
@@ -68,19 +69,9 @@ b_bookStart DATETIME,
 b_bookEnd DATETIME,
 b_isConfirm BOOLEAN,
 
-FOREIGN KEY (b_sitterId) REFERENCES p_member(m_id),
+FOREIGN KEY (b_wantedNo) REFERENCES p_wanted(w_no),
 FOREIGN KEY (b_applicId) REFERENCES p_member(m_id)
 
 );
-
-
-SELECT * FROM p_comment;
-
-SELECT * FROM p_member;
-
-SELECT * FROM p_point_date;
-
-
-DELETE FROM p_point_date;
 
 
