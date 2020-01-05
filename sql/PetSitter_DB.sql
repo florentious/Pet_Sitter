@@ -76,4 +76,7 @@ FOREIGN KEY (b_applicId) REFERENCES p_member(m_id)
 
 SELECT * FROM p_book;
 
-DELETE FROM p_book WHERE b_no > 1;
+SELECT * FROM p_wanted
+
+DELETE FROM p_book
+WHERE b_wantedNo IN (SELECT w_no FROM p_wanted WHERE w_id = '테스터1');

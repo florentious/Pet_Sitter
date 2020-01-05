@@ -1,4 +1,5 @@
 
+<%@page import="kr.co.acorn.dao.BookDao"%>
 <%@page import="kr.co.acorn.dao.CommentDao"%>
 <%@page import="kr.co.acorn.dto.MemberDto"%>
 <%@page import="kr.co.acorn.dao.WantedDao"%>
@@ -25,9 +26,10 @@
 	
 	WantedDao dao = WantedDao.getInstance();
 	CommentDao commentDao = CommentDao.getInstance();
+	BookDao bookDao = BookDao.getInstance();
 	
 	boolean isSuccess = false;
-	if(commentDao.deleteWantedNo(cNo) && dao.delete(cNo)) {
+	if(commentDao.deleteWantedNo(cNo) && bookDao.deleteWanted(cNo) && dao.delete(cNo)) {
 		isSuccess = true;	
 	}
 	

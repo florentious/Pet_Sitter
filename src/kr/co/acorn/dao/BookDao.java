@@ -276,6 +276,101 @@ public class BookDao {
 		return isSuccess;
 	}
 	
+	public boolean deleteWanted(int no) {
+		boolean isSuccess = false;
+		
+		Connection con = null;
+		PreparedStatement ps = null;
+		
+		try {
+			con = ConnLocator.getConnection();
+			StringBuffer sql = new StringBuffer();
+			sql.append("DELETE FROM p_book ");
+			sql.append("WHERE b_wantedNo = ? ");
+			
+			ps = con.prepareStatement(sql.toString());
+			
+			int index=0;
+			ps.setInt(++index, no);
+			
+			ps.executeUpdate();
+			
+			isSuccess = true;
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			close(con,ps,null);
+		}
+		
+		return isSuccess;
+	}
+	
+	public boolean deleteApplicId(String id) {
+		boolean isSuccess = false;
+		
+		Connection con = null;
+		PreparedStatement ps = null;
+		
+		try {
+			con = ConnLocator.getConnection();
+			StringBuffer sql = new StringBuffer();
+			sql.append("DELETE FROM p_book ");
+			sql.append("WHERE b_applicId = ? ");
+			
+			ps = con.prepareStatement(sql.toString());
+			
+			int index=0;
+			ps.setString(++index, id);
+			
+			ps.executeUpdate();
+			
+			isSuccess = true;
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			close(con,ps,null);
+		}
+		
+		return isSuccess;
+	}
+	
+	public boolean deletePetSitter(String id) {
+		boolean isSuccess = false;
+		
+		Connection con = null;
+		PreparedStatement ps = null;
+		
+		try {
+			con = ConnLocator.getConnection();
+			StringBuffer sql = new StringBuffer();
+			sql.append("DELETE FROM p_book ");
+			sql.append("WHERE b_wantedNo IN (SELECT w_no FROM p_wanted WHERE w_id = ?) ");
+			
+			ps = con.prepareStatement(sql.toString());
+			
+			int index=0;
+			ps.setString(++index, id);
+			
+			ps.executeUpdate();
+			
+			isSuccess = true;
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			close(con,ps,null);
+		}
+		
+		return isSuccess;
+	}
+	
+	
+	
 	public boolean update(BookDto dto) {
 		boolean isSuccess = false;
 		
