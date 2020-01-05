@@ -361,6 +361,36 @@ public class WantedDao {
 		return isSuccess;
 	}
 	
+	public boolean deleteFromId(String id) {
+		boolean isSuccess = false;
+		
+		Connection con = null;
+		PreparedStatement ps = null;
+		
+		try {
+			con = ConnLocator.getConnection();
+			StringBuffer sql = new StringBuffer();
+			sql.append("DELETE FROM p_wanted ");
+			sql.append("WHERE w_id = ? ");
+			ps = con.prepareStatement(sql.toString());
+			
+			int index=0;
+			ps.setString(++index, id);
+			
+			ps.executeUpdate();
+			
+			isSuccess = true;
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			close(con,ps,null);
+		}
+		
+		return isSuccess;
+	}
+	
 	//update
 	public boolean update(WantedDto dto) {
 		boolean isSuccess = false;

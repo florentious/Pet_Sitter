@@ -25,14 +25,14 @@
 	String subImgPath = imgPath.replace(contextPath, "");
 	
 	String absPath = request.getRealPath(subImgPath);
-	/* 
+	 
 	boolean isSuccess = false;
-	if( bookDao.deletePetSitter(id) &&  dao.delete(id)) {
+	if( commentDao.deleteFromId(id) && bookDao.deleteFromId(id) && pointDao.deleteFromID(id) && wantedDao.deleteFromId(id) && dao.delete(id)) {
 		isSuccess = true;
 	}
-	*/
 	
-	boolean isSuccess = dao.delete(id);
+	
+	//boolean isSuccess = dao.delete(id);
 	
 	
 	if(isSuccess) {

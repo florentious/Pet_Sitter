@@ -140,6 +140,46 @@ public class PointDao {
 		return isSuccess;
 	}
 	
+	public boolean deleteFromID(String id) {
+		boolean isSuccess = false;
+		
+		Connection con = null;
+		PreparedStatement ps = null;
+		PreparedStatement ps2 = null;
+		
+		try {
+			con = ConnLocator.getConnection();
+			StringBuffer sql = new StringBuffer();
+			sql.append("DELETE FROM p_point_date ");
+			sql.append("WHERE p_sitter_id = ? ");
+			
+			ps = con.prepareStatement(sql.toString());
+			
+			int index=0;
+			ps.setString(++index, id);
+			
+			ps.executeUpdate();
+			
+			sql.setLength(0);
+			
+			sql.append("DELETE FROM p_point_date ");
+			sql.append("WHERE p_applic_id = ? ");
+			ps2 = con.prepareStatement(sql.toString());
+			index = 0;
+			ps2.setString(++index, id);
+			ps2.executeUpdate();
+			
+			isSuccess = true;
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			close(con,ps,null);
+		}
+		
+		return isSuccess;
+	}
 	
 	
 	

@@ -390,44 +390,12 @@ public class CommentDao {
 		return isSuccess;
 	}
 	
-	public boolean deletePetSitter(String id) {
+	public boolean deleteFromId(String id) {
 		boolean isSuccess = false;
 		
 		Connection con = null;
 		PreparedStatement ps = null;
-		
-		try {
-			con = ConnLocator.getConnection();
-			
-			StringBuffer sql = new StringBuffer();
-			sql.append("DELETE FROM p_comment ");
-			sql.append("WHERE c_wantedNo IN (SELECT w_no FROM p_wanted WHERE w_id=?) ");
-			
-			ps = con.prepareStatement(sql.toString());
-			
-			int index=0;
-			ps.setString(++index, id);
-			
-			ps.executeUpdate();
-			
-			isSuccess = true;
-			
-			
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			close(con,ps,null);
-		}
-		
-		return isSuccess;
-	}
-	
-	public boolean deleteApplicant(String id) {
-		boolean isSuccess = false;
-		
-		Connection con = null;
-		PreparedStatement ps = null;
+		PreparedStatement ps2 = null;
 		
 		try {
 			con = ConnLocator.getConnection();
@@ -442,6 +410,16 @@ public class CommentDao {
 			ps.setString(++index, id);
 			
 			ps.executeUpdate();
+			
+			
+			sql.setLength(0);
+			sql.append("DELETE FROM p_comment ");
+			sql.append("WHERE c_wantedNo IN (SELECT w_no FROM p_wanted WHERE w_id=?) ");
+			
+			ps2 = con.prepareStatement(sql.toString());
+			index = 0;
+			ps2.setString(++index, id);
+			ps2.executeUpdate();
 			
 			isSuccess = true;
 			
