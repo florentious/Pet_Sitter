@@ -74,4 +74,6 @@ FOREIGN KEY (b_applicId) REFERENCES p_member(m_id)
 
 );
 
+SELECT * FROM p_book;
 
+DELETE FROM p_book WHERE b_no > 1;

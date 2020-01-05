@@ -70,6 +70,41 @@ public class BookDao {
 		return maxRows;
 	}
 	
+	// get Max index Number
+		public int getMaxNo() {
+			int maxNo = 0;
+			
+			Connection con = null;
+			PreparedStatement ps = null;
+			ResultSet rs = null;
+			
+			try {
+				con = ConnLocator.getConnection();
+				
+				StringBuffer sql = new StringBuffer();
+				sql.append("SELECT IFNULL(MAX(b_no)+1,1) FROM p_book ");
+				ps = con.prepareStatement(sql.toString());
+				
+				rs = ps.executeQuery();
+				
+				if(rs.next()) {
+					int index = 0;
+					maxNo = rs.getInt(++index);
+				}
+				
+				
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} finally {
+				close(con, ps, rs);
+				
+			}
+			
+			return maxNo;
+			
+		}
+	
 	public ArrayList<BookDto> select() {
 		ArrayList<BookDto> list = new ArrayList<BookDto>();
 		
@@ -83,7 +118,7 @@ public class BookDao {
 			StringBuffer sql = new StringBuffer();
 			sql.append("SELECT b_no, b_wantedNo, b_applicId, b_content, b_regDate, b_bookStart, b_bookEnd, b_isConfirm ");
 			sql.append("FROM p_book ");
-			sql.append("ORDER BY b_no DESC ");
+			sql.append("ORDER BY b_no ");
 			
 			ps = con.prepareStatement(sql.toString());
 			
@@ -130,7 +165,7 @@ public class BookDao {
 			sql.append("SELECT b_no, b_wantedNo, b_applicId, b_content, b_regDate, b_bookStart, b_bookEnd, b_isConfirm ");
 			sql.append("FROM p_book ");
 			sql.append("WHERE b_wantedNo = ? ");
-			sql.append("ORDER BY b_no DESC ");
+			sql.append("ORDER BY b_no ");
 			ps = con.prepareStatement(sql.toString());
 			int index = 0;
 			ps.setInt(++index, wantedNumber);
@@ -192,7 +227,6 @@ public class BookDao {
 			ps.setInt(++index, dto.getWantedNo());
 			ps.setString(++index, dto.getApplicId());
 			ps.setString(++index, dto.getContent());
-			ps.setString(++index, dto.getRegDate());
 			ps.setString(++index, dto.getBookStart());
 			ps.setString(++index, dto.getBookEnd());
 			ps.setBoolean(++index, dto.getIsConfirm());
@@ -211,8 +245,106 @@ public class BookDao {
 		return isSuccess;
 	}
 	
+	public boolean delete(int no) {
+		boolean isSuccess = false;
+		
+		Connection con = null;
+		PreparedStatement ps = null;
+		
+		try {
+			con = ConnLocator.getConnection();
+			StringBuffer sql = new StringBuffer();
+			sql.append("DELETE FROM p_book ");
+			sql.append("WHERE b_no = ? ");
+			
+			ps = con.prepareStatement(sql.toString());
+			
+			int index=0;
+			ps.setInt(++index, no);
+			
+			ps.executeUpdate();
+			
+			isSuccess = true;
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			close(con,ps,null);
+		}
+		
+		return isSuccess;
+	}
 	
+	public boolean update(BookDto dto) {
+		boolean isSuccess = false;
+		
+		Connection con = null;
+		PreparedStatement ps = null;
+		
+		try {
+			con = ConnLocator.getConnection();
+			StringBuffer sql = new StringBuffer();
+			sql.append("UPDATE p_book ");
+			sql.append("SET b_content = ?, b_bookStart=?, b_bookEnd=? ");
+			sql.append("WHERE b_no=? ");
+			
+			ps = con.prepareStatement(sql.toString());
+			
+			int index=0;
+			ps.setString(++index, dto.getContent());
+			ps.setString(++index, dto.getBookStart());
+			ps.setString(++index, dto.getBookEnd());
+			
+			ps.setInt(++index, dto.getNo());
+			
+			ps.executeUpdate();
+			
+			isSuccess = true;
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			close(con,ps,null);
+		}
+		
+		return isSuccess;
+	}
 	
+	public boolean updateConfirm(BookDto dto) {
+		boolean isSuccess = false;
+		
+		Connection con = null;
+		PreparedStatement ps = null;
+		
+		try {
+			con = ConnLocator.getConnection();
+			StringBuffer sql = new StringBuffer();
+			sql.append("UPDATE p_book ");
+			sql.append("SET b_isConfirm = ? ");
+			sql.append("WHERE b_no=? ");
+			
+			ps = con.prepareStatement(sql.toString());
+			
+			int index=0;
+			ps.setBoolean(++index, dto.getIsConfirm());
+			
+			ps.setInt(++index, dto.getNo());
+			
+			ps.executeUpdate();
+			
+			isSuccess = true;
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			close(con,ps,null);
+		}
+		
+		return isSuccess;
+	}
 	
 	
 	

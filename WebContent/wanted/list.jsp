@@ -144,7 +144,7 @@
 			      <td><%=dto.getId() %></td>
 			      <%-- regDate 에 .0 붙는거 처리 .substring(0, dto.getRegDate().length()-2) --%>
 			      <td><%=dto.getRegDate() %></td>
-			      <td><button class="btn btn-outline-success book">예약</button></td>
+			      <td> <% if(dto.getId().equals(memberDto.getId()) || memberDto.getType()==0 ) { %> <button class="btn btn-outline-success book">예약</button> <%} %> </td>
 			    </tr>
 			    <tr>
 			    	<%-- select 부분 --%>
@@ -233,11 +233,100 @@
 			%>
 				// 테이블 내에 내부 테이블 형태로 만들어?
 				let html = "";
-				
+				const curThis = $(this);
+				/* 
 				html += '<td colspan="5">';
 				html += 'PetSitter-make table..';
 				html += '</td>';
 				$(this).parent().parent().next().append(html);
+				 */
+				//console.log($(this).parent().prev().prev().text());
+				<%-- 위에서 조정해버림(본인인경우만 버튼이 나옴)
+				if($(this).parent().prev().prev().text() == "<%=memberDto.getId() %>") {
+					// 작성자인 경우	
+				} else {
+					// 작성자가 아닌 경우
+				}
+				 --%>
+				
+				 $.ajax({
+						type : 'post',
+						url : 'select_book_ajax.jsp',
+						data : {wantedNo : $(this).parent().prev().prev().prev().prev().text()},
+						datatype : 'json',
+						error : function(){
+						},
+						success : function(json){
+							if(json.item.length == 0) {
+								let html = "";
+								html += '<td colspan="4">';
+								html += '<strong>데이터가 없습니다.</strong>';
+								
+								html += '</td>';
+								html += '<td>';
+								html += '<button class="bookInsert btn btn-outline-primary">등록</button>';
+								html += '</td>';
+								curThis.parent().parent().next().append(html);
+							}else {
+								let html = "";
+								html += '<td colspan="4">';
+								
+								html += '<table class="col-sm-12">';
+								html += '<colgroup>';
+								html += '<col width="15%"/>'; // 신청자 아이디	
+								html += '<col width="20%"/>'; // 시작일
+								html += '<col width="20%"/>'; // 종료일
+								html += '<col width="30%"/>'; // 내용
+								html += '<col width="15%"/>'; // 확정결과
+								html += '</colgroup>';
+								html += '<thead>';
+								html += '<tr>';
+							    html += '<th scope="col">아이디</th>';
+							    html += '<th scope="col">시작일</th>';
+							    html += '<th scope="col">종료일</th>';
+							    html += '<th scope="col">내  용</th>';
+							    html += '<th scope="col">확정결과</th>';
+							    html += '</tr>';
+								html += '</thead>';
+								html += '<tbody>';
+								
+								
+								for(let i=0;i<json.item.length;i++) {
+									html += '<tr>';
+									
+									html += '<td>' + json.item[i].applicId + '</td>' ;
+									html += '<td>' + json.item[i].bookStart + '</td>' ;
+									html += '<td>' + json.item[i].bookEnd + '</td>' ;
+									html += '<td>' + json.item[i].content + '</td>' ;
+									html += '<td>';
+									if(json.item[i].isConfirm == false) {
+										// no;
+										html += '<button type="button" class="bookConfirm">no</button>'; 
+									} else {
+										html += '<button type="button" class="bookConfirm">yes</button>';
+									}
+
+									html += '<input type="hidden" value="'+json.item[i].no+'"/>';
+									html +=  '</td>' ;
+								
+									
+									html += '</tr>';
+									
+								}
+								
+								html += '</tbody>';
+								html += '</table>';
+								
+								html += '</td>';
+								
+								
+								curThis.parent().parent().next().append(html);
+								
+							}
+						}
+					});
+				
+				
 				
 			<%
 			} else {
@@ -356,20 +445,22 @@
 			$(this).html('접기');
 			$(this).parent().parent().next().html('');
 			
+			
 			let html ="";
 			html += '<td colspan="4">';
 			html += '<div class="form-group row">';
 	
 			html += '<div class="col-sm-4">';
 			html += '시작일';
-			html += '<input type="date" name="inputBookStart" id="inputBookStart"/>';
-			
+			html += '<input type="datetime-local" name="inputBookStart" id="inputBookStart"/>';
+			html += '<br>';
 			html += '종료일';
-			html += '<input type="date" name="inputBookEnd" id="inputBookEnd"/>';
+			html += '<input type="datetime-local" name="inputBookEnd" id="inputBookEnd"/>';
 			html += '</div>';
 			html += '<div class="col-sm-8">';
 			html += '내용<br>';
-			html += '<input type="text" name="inputBookComment" id="inputBookComment" value=""/>';
+			html += '<input type="text" class="col-sm-10" name="inputBookContent" id="inputBookContent" value=""/>';
+			html += '<div class="bookMessage"></div>';
 			html += '</div>';
 			
 			html += '</div>';
@@ -386,28 +477,230 @@
 		
 	});
 	
-	$(document).on('click','.bookInsertConfirm',function(event){
-			
+	$(document).on('click','.bookUpdate',function(event){
 		const curThis = $(this);
+		//console.log($(this).parent().parent().children(":first").text().substring(0,$(this).parent().parent().children(":first").text().length-2));
+		//console.log($(this).parent().parent().parent().parent().parent().parent().next());
 		
-		$.ajax({
-			type : 'post',
-			url : 'insert_book_ajax.jsp',
-			// 넘겨야할 것 : bookStart, bookEnd, comment, wantedNo, applicId
-			data : {},
-			datatype : 'json',
-			error : function(){
-			},
-			success : function(json){
-				
-			}
-		});
+		const nextTr = $(this).parent().parent().parent().parent().parent().parent().next();
 		
+		//console.log($(this).parent().children('input').val());
+		
+		
+		
+		if(nextTr.children() == null || nextTr.children().length == 0) {
+			
+			$(this).parent().parent().parent().children().find('.bookUpdate').html('수정');
+			
+			$(this).html('접기');
+			nextTr.html('');
+			 
+			let html ="";
+			html += '<td colspan="4">';
+			html += '<div class="form-group row">';
+	
+			html += '<div class="col-sm-4">';
+			html += '시작일';
+			html += '<input type="datetime-local" name="inputBookStart" id="inputBookStart" value="'+$(this).parent().parent().children(":first").text().substring(0,$(this).parent().parent().children(":first").text().length-2).replace(" ","T")+'"/>';
+			html += '<br>';
+			html += '종료일';
+			html += '<input type="datetime-local" name="inputBookEnd" id="inputBookEnd" value="'+$(this).parent().parent().children(":first").next().text().substring(0,$(this).parent().parent().children(":first").next().text().length-2).replace(" ","T")+'"/>';
+			html += '</div>';
+			html += '<div class="col-sm-8">';
+			html += '내용<br>';
+			html += '<input type="text" class="col-sm-10" name="inputBookContent" id="inputBookContent" value="'+$(this).parent().parent().children(":first").next().next().text()+'"/>';
+			html += '<div class="bookMessage"></div>';
+			html += '</div>';
+			
+			html += '</div>';
+			html += '</td>';
+			html += '<td>';
+			html += '<button class="bookUpdateConfirm btn btn-outline-primary">수정</button>';
+			html += '<input type="hidden" value="'+$(this).parent().children('input').val() +'"/>';
+			html += '</td>';
+			
+			nextTr.append(html);
+			
+		} else {
+			$(this).parent().parent().parent().children().find('.bookUpdate').html('수정');
+			//$(this).html('수정');
+			$(this).parent().parent().parent().parent().parent().parent().next().html('');
+		}
 		
 		
 		
 	});
 	
+	$(document).on('click','.bookInsertConfirm',function(event){
+		/* 
+		// if start Date doesn't input
+		if($(this).parent().prev().find('#inputBookStart').val() ==null && $(this).parent().prev().find('#inputBookStart').val().length() == 0) {
+			return;
+		}
+		// if end Date doesn't input
+		if($(this).parent().prev().find('#inputBookEnd').val() ==null && $(this).parent().prev().find('#inputBookEnd').val().length() == 0) {
+			return;
+		}
+		// if comment doesn't input
+		if($(this).parent().prev().find('#inputBookContent').val() ==null && $(this).parent().prev().find('#inputBookContent').val().length() == 0) {
+			return;
+		}
+		*/
+		
+		const curThis = $(this);
+		
+		//console.log($(this).parent().prev().find('#inputBookStart'));
+		//onsole.log($(this).parent().prev().find('#inputBookStart').val());
+		 
+		$.ajax({
+			type : 'post',
+			url : 'insert_book_ajax.jsp',
+			// 넘겨야할 것 : wantedNo, applicId, content, bookStart, bookEnd
+			data : {
+				wantedNo : $(this).parent().parent().prev().prev().children(":first").text(),
+				applicId : "<%=memberDto.getId() %>",
+				content : $(this).parent().prev().find('#inputBookContent').val(),
+				bookStart : $(this).parent().prev().find('#inputBookStart').val(),
+				bookEnd : $(this).parent().prev().find('#inputBookEnd').val()
+			},
+			datatype : 'json',
+			error : function(){
+			},
+			success : function(json){
+				if(json.result == "ok") {
+					//console.log("success");
+					const resetBtn = curThis.parent().parent().prev().prev().children(":last").find(".book");
+					resetBtn.trigger("click");
+					resetBtn.trigger("click");
+					
+					
+				} else {
+					//$(this).parent().prev().find('#bookMessage').html("<span class='text-danger'>정보를 입력해주세요</span>");
+				}
+			}
+		});
+		
+	});
+	
+	$(document).on('click','.bookUpdateConfirm',function(event){
+		/* 
+		// if start Date doesn't input
+		if($(this).parent().prev().find('#inputBookStart').val() ==null && $(this).parent().prev().find('#inputBookStart').val().length() == 0) {
+			return;
+		}
+		// if end Date doesn't input
+		if($(this).parent().prev().find('#inputBookEnd').val() ==null && $(this).parent().prev().find('#inputBookEnd').val().length() == 0) {
+			return;
+		}
+		// if comment doesn't input
+		if($(this).parent().prev().find('#inputBookContent').val() ==null && $(this).parent().prev().find('#inputBookContent').val().length() == 0) {
+			return;
+		}
+		*/
+		
+		const curThis = $(this);
+		
+		//console.log($(this).parent().children('input').val());
+		// 여러개 수정인경우 다른거 수정 누르다가 조정하는거 처리
+		  
+		$.ajax({
+			type : 'post',
+			url : 'update_book_ajax.jsp',
+			// 넘겨야할 것 : no, content, bookStart, bookEnd
+			data : {
+				no : $(this).parent().children('input').val(),
+				content : $(this).parent().prev().find('#inputBookContent').val(),
+				bookStart : $(this).parent().prev().find('#inputBookStart').val(),
+				bookEnd : $(this).parent().prev().find('#inputBookEnd').val()
+			},
+			datatype : 'json',
+			error : function(){
+			},
+			success : function(json){
+				if(json.result == "ok") {
+					//console.log("success");
+					const resetBtn = curThis.parent().parent().prev().prev().children(":last").find(".book");
+					resetBtn.trigger("click");
+					resetBtn.trigger("click");
+					
+					
+				} else {
+					//$(this).parent().prev().find('#bookMessage').html("<span class='text-danger'>정보를 입력해주세요</span>");
+				}
+			}
+		});
+		
+	});
+	
+	$(document).on('click','.bookConfirm', function(){
+		const curThis = $(this);
+		
+		let isConfirmNow = false;
+		
+		//console.log($(this).text());
+		if($(this).text() == 'yes') {
+			isConfirmNow = true;
+		}
+		
+		
+		$.ajax({
+			type : 'post',
+			url : 'confirm_book_ajax.jsp',
+			// 넘겨야할 것 : no, content, bookStart, bookEnd
+			data : {
+				no : $(this).parent().children('input').val(),
+				isConfirm : isConfirmNow
+			},
+			datatype : 'json',
+			error : function(){
+			},
+			success : function(json){
+				if(json.result == "ok") {
+					//console.log("success");
+					
+					if(json.isConfirm == true) {
+						curThis.text('yes');
+					} else {
+						curThis.text('no');
+					}
+					
+					
+				} else {
+					//$(this).parent().prev().find('#bookMessage').html("<span class='text-danger'>정보를 입력해주세요</span>");
+				}
+			}
+		});
+		
+	});
+	
+	$(document).on('click','.bookDelete', function(){
+		const curThis = $(this);
+		
+		$.ajax({
+			type : 'post',
+			url : 'delete_book_ajax.jsp',
+			// 넘겨야할 것 : no
+			data : {
+				no : $(this).parent().children('input').val()
+			},
+			datatype : 'json',
+			error : function(){
+			},
+			success : function(json){
+				if(json.result == "ok") {
+					//console.log("success");
+					const resetBtn = curThis.parent().parent().parent().parent().parent().parent().prev().children(":last").find(".book");
+					resetBtn.trigger("click");
+					resetBtn.trigger("click");
+					
+				} else {
+					//$(this).parent().prev().find('#bookMessage').html("<span class='text-danger'>아이디를 입력해주세요</span>");
+				}
+			}
+		});
+		
+		
+	});
 	
 
 </script>

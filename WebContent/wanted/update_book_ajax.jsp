@@ -7,20 +7,17 @@
 <%
 	request.setCharacterEncoding("utf-8");
 	
-	int wantedNo = Integer.parseInt(request.getParameter("wantedNo"));
-	String applicId = request.getParameter("applicId");
+	int no = Integer.parseInt(request.getParameter("no"));
 	String content = request.getParameter("content");
 	String bookStart = request.getParameter("bookStart");
 	String bookEnd = request.getParameter("bookEnd");
 	
 	BookDao bookDao = BookDao.getInstance();
 	
-	int no = bookDao.getMaxNo();
-	
-	BookDto bookDto = new BookDto(no,wantedNo,applicId,content,null,bookStart,bookEnd,false);
+	BookDto bookDto = new BookDto(no,0,null,content,null,bookStart,bookEnd,false);
 	
 	
-	boolean isSuccess = bookDao.insert(bookDto);
+	boolean isSuccess = bookDao.update(bookDto);
 
 	JSONObject obj = new JSONObject();
 	if(isSuccess) {

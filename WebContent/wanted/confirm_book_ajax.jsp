@@ -7,24 +7,26 @@
 <%
 	request.setCharacterEncoding("utf-8");
 	
-	int wantedNo = Integer.parseInt(request.getParameter("wantedNo"));
-	String applicId = request.getParameter("applicId");
-	String content = request.getParameter("content");
-	String bookStart = request.getParameter("bookStart");
-	String bookEnd = request.getParameter("bookEnd");
+	int no = Integer.parseInt(request.getParameter("no"));
+	Boolean isConfirm = Boolean.parseBoolean(request.getParameter("isConfirm"));
+	
+	if(isConfirm == false) {
+		isConfirm = true;
+	} else {
+		isConfirm = false;
+	}
 	
 	BookDao bookDao = BookDao.getInstance();
 	
-	int no = bookDao.getMaxNo();
-	
-	BookDto bookDto = new BookDto(no,wantedNo,applicId,content,null,bookStart,bookEnd,false);
+	BookDto bookDto = new BookDto(no,0,null,null,null,null,null,isConfirm);
 	
 	
-	boolean isSuccess = bookDao.insert(bookDto);
+	boolean isSuccess = bookDao.updateConfirm(bookDto);
 
 	JSONObject obj = new JSONObject();
 	if(isSuccess) {
 		obj.put("result","ok");
+		obj.put("isConfirm",isConfirm);
 	}else {
 		obj.put("result","fail");
 	}
