@@ -264,7 +264,7 @@
 								
 								html += '</td>';
 								html += '<td>';
-								html += '<button class="bookInsert btn btn-outline-primary">등록</button>';
+								//html += '<button class="bookInsert btn btn-outline-primary">등록</button>';
 								html += '</td>';
 								curThis.parent().parent().next().append(html);
 							}else {

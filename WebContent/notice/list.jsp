@@ -13,67 +13,42 @@
 
 <%
 	int len = 10;
-
 	int pageLength = 2;
-
 	int start = 0;
-
 	int totalRows = 0;
-
 	int totalPage = 0;
-
 	int startPage = 0;
-
 	int endPage = 0;
-
 	int pageNum = 0;
-
 	int cPage = 0;
-
+	
 	String tempPage = request.getParameter("page");
-
 	if (tempPage == null || tempPage.length() == 0) {
-
 		cPage = 1;
-
 	}
 
 	try {
-
 		cPage = Integer.parseInt(tempPage);
-
 	} catch (NumberFormatException e) {
-
 		cPage = 1;
-
 	}
 
 	//An = a1 + (n-1)*d
-
 	NoticeDao dao = NoticeDao.getInstance();
-
 	totalRows = dao.getTotalRows();
-
 	totalPage = totalRows % len == 0 ? totalRows / len : totalRows / len + 1;
 
 	if (totalPage == 0) {
-
 		totalPage = 1;
-
 	}
 
 	if (cPage > totalPage) {
-
 		response.sendRedirect("list.jsp?page=1");
-
 		return;
-
 	}
 
 	start = (cPage - 1) * len;
-
 	pageNum = totalRows + (cPage - 1) * (-len);
-
 	ArrayList<NoticeDto> list = dao.select(start, len);
 
 
@@ -102,7 +77,7 @@
 
 	<ol class="breadcrumb">
 
-		<li class="breadcrumb-item"><a href="/index.jsp">Home</a></li>
+		<li class="breadcrumb-item"><a href="<%=contextPath %>/index.jsp">Home</a></li>
 
 		<li class="breadcrumb-item active" aria-current="page">Notice</li>
 
