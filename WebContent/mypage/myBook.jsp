@@ -80,7 +80,7 @@
 	startPage = cPage % pageLength == 0 ? 1 + (cpage/pageLength - 1) * pageLength  : 1 + (cpage/pageLength ) * pageLength;
 	endPage = totalPage > (startPage + pageLength -1 )? (startPage + pageLength -1 ) : totalPage;
 	 */
-	ArrayList<WantedDto> list = dao.select(start, len,memberDto.getId());
+	ArrayList<WantedDto> list = dao.selectBook(start, len,memberDto.getId());
 	 
 	pageNum = totalRows-((cPage-1)*len);
 	

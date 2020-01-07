@@ -290,6 +290,55 @@ public class WantedDao {
 		return list;
 	}
 	
+	public ArrayList<WantedDto> selectBook(int start, int len, String myId) {
+		ArrayList<WantedDto> list = new ArrayList<WantedDto>();
+		
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		
+		try {
+			con = ConnLocator.getConnection();
+			
+			StringBuffer sql = new StringBuffer();
+			sql.append("SELECT w_no, w_title, w_content, w_regDate, w_isEnd, w_id ");
+			sql.append("FROM p_wanted ");
+			sql.append("WHERE w_no in (SELECT b_wantedNo FROM p_book WHERE b_applicId = ?) ");
+			sql.append("ORDER BY w_no DESC ");
+			sql.append("LIMIT ?,?");
+			ps = con.prepareStatement(sql.toString());
+			
+			int index = 0;
+			ps.setString(++index, myId);
+			ps.setInt(++index, start);
+			ps.setInt(++index, len);
+			
+			rs = ps.executeQuery();
+			
+			while(rs.next()) {
+				index = 0;
+				int no = rs.getInt(++index);
+				String title = rs.getString(++index);
+				String content = rs.getString(++index);
+				String regDate = rs.getString(++index);
+				boolean isEnd = rs.getBoolean(++index);
+				String id = rs.getString(++index);
+				
+				list.add(new WantedDto(no,title,content,regDate,isEnd,id));
+				
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			close(con,ps,rs);
+			
+		}
+		
+		return list;
+	}
+	
 	
 	//insert
 	public boolean insert(WantedDto dto) {
