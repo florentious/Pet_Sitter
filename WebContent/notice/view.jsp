@@ -80,9 +80,9 @@
 
 	<ol class="breadcrumb">
 
-		<li class="breadcrumb-item"><a href="/index.jsp">Home</a></li>
+		<li class="breadcrumb-item"><a href="<%=contextPath %>/index.jsp">Home</a></li>
 
-		<li class="breadcrumb-item active" aria-current="page">DEPT</li>
+		<li class="breadcrumb-item active" aria-current="page">Notice</li>
 
 	</ol>
 
@@ -102,36 +102,23 @@
 			<h3>글내용 상세보기</h3>
 
 			<form name="f" method="post">
-
 				<div class="form-group row">
-
 					<label for="title" class="col-sm-2 col-form-label">제목</label>
-
 					<div class="col-sm-10">
-
 						<input type="text" class="form-control" id="title" name="title"
 							value="<%=dto.getTitle()%>">
-
 					</div>
-
 				</div>
-
 				<div class="form-group row">
-
 					<label for="id" class="col-sm-2 col-form-label">내용</label>
-
 					<div class="col-sm-10">
-
 						<%-- <input type="text" class="form-control" id="id" name="id" value="<%=dto.getContents() %>"> --%>
-
-						<textarea id="contents" rows="4" class="col-sm-12"><%=dto.getContents()%></textarea>
-
+						<%-- textarea name 태그 안넣어줌 --%>
+						<textarea name="contents" id="contents" rows="4" class="col-sm-12"><%=dto.getContents()%></textarea>
 					</div>
-
 				</div>
-
-
-
+				<%-- 수정부분  id 값 hidden 으로 넣어줌 --%>
+				<input type="hidden" name="id" value="<%=dto.getId() %>"/>
 				<input type="hidden" name="page" value="<%=cPage%>" />
 				<input type="hidden" name="no" value="<%=no%>">
 

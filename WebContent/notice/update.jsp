@@ -6,12 +6,14 @@
 
 <%
 	request.setCharacterEncoding("utf-8");
+
 	String tempPage = request.getParameter("page");
 	int no = Integer.parseInt(request.getParameter("no"));
 	String regdate = request.getParameter("regdate");
 	String title = request.getParameter("title");
 	String id = request.getParameter("id");
 	String contents = request.getParameter("contents");
+	
 	NoticeDao dao = NoticeDao.getInstance();
 	NoticeDto dto = new NoticeDto(no, title, id, regdate, contents);
 	boolean isSuccess = dao.update(dto);

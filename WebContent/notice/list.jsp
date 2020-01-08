@@ -139,115 +139,80 @@
 
 						<%
 							if (list.size() != 0) {
-						%>
-
-						<%
-							for (NoticeDto dto : list) {
+								for (NoticeDto dto : list) {
 						%>
 
 						<tr>
 
-							<td><%=pageNum--%></td>
-
+							<td><%=dto.getNo() %></td>
 							<td><a href="view.jsp?page=<%=cPage%>&no=<%=dto.getNo()%>"><%=dto.getTitle()%></a></td>
-
 							<td><%=dto.getId()%></td>
-
 							<td><%=dto.getRegDate() %></td>
 
 						</tr>
 
 						<%
-							}
-						%>
-
-						<%
+								}
 							} else {
 						%>
 
 						<tr>
-
 							<td colspan="3">데이터가 존재하지 않습니다.</td>
-
 						</tr>
 
 						<%
 							}
 						%>
 
-
-
 					</tbody>
-
 				</table>
-
 			</div>
 
 			<nav aria-label="Page navigation example">
-
 				<ul class="pagination justify-content-center">
-
 					<%
 						if (currentBlock == 1) {
 					%>
-
 					<li class="page-item disabled"><a class="page-link" href="#"
 						tabindex="-1" aria-disabled="true">Previous</a></li>
-
 					<%
 						} else {
 					%>
-
 					<li class="page-item"><a class="page-link"
 						href="list.jsp?page=<%=startPage - 1%>">Previous</a></li>
-
 					<%
 						}
 					%>
-
 					<%
 						for (int i = startPage; i <= endPage; i++) {
 					%>
 
 					<li class="page-item <%if (cPage == i) {%>active<%}%>"><a
 						class="page-link" href="list.jsp?page=<%=i%>"><%=i%></a></li>
-
 					<%
 						}
 					%>
-
 					<%
 						if (currentBlock == totalBlock) {
 					%>
-
 					<li class="page-item disabled"><a class="page-link" href="#"
 						tabindex="-1" aria-disabled="true">Next</a></li>
-
 					<%
 						} else {
 					%>
-
 					<li class="page-item"><a class="page-link"
 						href="list.jsp?page=<%=endPage + 1%>">Next</a></li>
-
 					<%
 						}
 					%>
-
 				</ul>
-
 			</nav>
-
-
 
 			<div class="text-right">
 
 				<a href="write.jsp?page=<%=cPage%>"
 					class="btn btn-outline-secondary">공지등록</a>
-
 			</div>
-
-
 
 		</div>
 
