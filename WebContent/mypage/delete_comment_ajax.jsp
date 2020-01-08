@@ -10,13 +10,14 @@
 	String tempNo = request.getParameter("no");
 	
 	int no = Integer.parseInt(tempNo);
+	int wantedNo = Integer.parseInt(request.getParameter("wantedNo"));
 	
 	CommentDao commentDao = CommentDao.getInstance();
 	
 	boolean isSuccess = commentDao.delete(no);
 		
 	// jsonArray 형태로만들어서 보냄(Dao에서도 JSON으로 코딩해야함)
-	JSONArray item = commentDao.selectJson();
+	JSONArray item = commentDao.selectJson(wantedNo);
 	
 	JSONObject obj = new JSONObject();
 	if(isSuccess) {

@@ -70,7 +70,7 @@ public class CommentDao {
 		
 	}
 	
-	public int getTotalRows() {
+	public int getTotalRows(int wantedNo) {
 		int totalRows = 0;
 		
 		Connection con = null;
@@ -81,13 +81,17 @@ public class CommentDao {
 			con = ConnLocator.getConnection();
 			
 			StringBuffer sql = new StringBuffer();
-			sql.append("SELECT COUNT(c_no) FROM p_comment ");
+			sql.append("SELECT COUNT(c_no) ");
+			sql.append("FROM p_comment ");
+			sql.append("WHERE c_wanted_no = ? ");
 			ps = con.prepareStatement(sql.toString());
+			int index = 0;
+			ps.setInt(++index, wantedNo);
 			
 			rs = ps.executeQuery();
 			
 			if(rs.next()) {
-				int index = 0;
+				index = 0;
 				totalRows = rs.getInt(++index);
 			}
 			
@@ -195,6 +199,52 @@ public class CommentDao {
 		return list;
 	}
 	
+	public ArrayList<CommentDto> select(int newWantedNo) {
+		ArrayList<CommentDto> list = new ArrayList<CommentDto>();
+		
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		
+		try {
+			con = ConnLocator.getConnection();
+			
+			StringBuffer sql = new StringBuffer();
+			sql.append("SELECT c_no, c_wanted_no, c_member_id, c_comment, c_regdate ");
+			sql.append("FROM p_comment ");
+			sql.append("WHERE c_wanted_no = ? ");
+			sql.append("ORDER BY c_regdate DESC ");
+			ps = con.prepareStatement(sql.toString());
+			int index = 0;
+			
+			ps.setInt(++index, newWantedNo);
+			
+			
+			rs = ps.executeQuery();
+			
+			while(rs.next()) {
+				index = 0;
+				int no = rs.getInt(++index);
+				int wantedNo = rs.getInt(++index);
+				String id = rs.getString(++index);
+				String comment = rs.getString(++index);
+				String regDate = rs.getString(++index);
+				
+				list.add(new CommentDto(no,wantedNo ,id,comment,regDate));
+				
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			close(con,ps,rs);
+			
+		}
+		
+		return list;
+	}
+	
 	public JSONArray selectJson() {
 		JSONArray item = new JSONArray();	// JSONObject ArrayList
 		JSONObject obj = null;
@@ -216,6 +266,61 @@ public class CommentDao {
 			rs = ps.executeQuery();
 			while(rs.next()) {
 				int index = 0;
+				int no = rs.getInt(++index);
+				int wantedNo = rs.getInt(++index);
+				String id = rs.getString(++index);
+				String comment = rs.getString(++index);
+				String regDate = rs.getString(++index);
+				
+				// item에 넣어서확인
+				obj = new JSONObject();
+				obj.put("no", no);
+				obj.put("wantedNo", wantedNo);
+				obj.put("id", id);
+				obj.put("comment", comment);
+				obj.put("regDate", regDate);
+				
+				item.add(obj);
+				
+			}
+			
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			close(con,ps,rs);
+		}
+		
+		
+		
+		return item;
+	}
+	
+	public JSONArray selectJson(int newWantedNo) {
+		JSONArray item = new JSONArray();	// JSONObject ArrayList
+		JSONObject obj = null;
+		
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		
+		try {
+			con = ConnLocator.getConnection();
+			
+			StringBuffer sql = new StringBuffer();
+			sql.append("SELECT c_no, c_wanted_no, c_member_id, c_comment, c_regdate ");
+			sql.append("FROM p_comment ");
+			sql.append("WHERE c_wanted_no = ? ");
+			sql.append("ORDER BY c_regdate DESC ");
+			ps = con.prepareStatement(sql.toString());
+			int index = 0;
+			ps.setInt(++index, newWantedNo);
+			
+			
+			rs = ps.executeQuery();
+			while(rs.next()) {
+				index = 0;
 				int no = rs.getInt(++index);
 				int wantedNo = rs.getInt(++index);
 				String id = rs.getString(++index);

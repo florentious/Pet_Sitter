@@ -2,7 +2,8 @@
 
 
   <!-- footer start -->
-  <footer class="bg-dark bd-footer fixed-bottom " style="color: white; padding: 1em; margin-top: 2em; position : absoulute">
+  <br><br><br>
+  <footer class="bg-dark bd-footer fixed-bottom text-muted" style="color: white; padding: 1em;">
       <div class="container-fluid text-right">
         <p>By OurTeam Since 2019-12-23</p>
 

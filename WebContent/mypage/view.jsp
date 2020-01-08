@@ -282,9 +282,9 @@
 		
 		<%
 			CommentDao commentDao = CommentDao.getInstance();
-			ArrayList<CommentDto> commentList = commentDao.select();
+			ArrayList<CommentDto> commentList = commentDao.select(no);
 			
-			int commentTotalRows = commentDao.getTotalRows();
+			int commentTotalRows = commentDao.getTotalRows(no);
 		
 		
 		%>
@@ -582,7 +582,9 @@
 			$.ajax({
 				type : 'post',
 				url : 'delete_comment_ajax.jsp',
-				data : { no:$(this).parent().children('input').val()},
+				data : { no:$(this).parent().children('input').val(),
+				    	 wantedNo : "<%=wantedDto.getNo() %>",	
+				},
 				dataType : 'json',
 				error : function() {
 					
@@ -599,33 +601,43 @@
 						$("#commentTable>tbody").html(''); // 그전에 있던거 초기화(추가형태로하면 힘드니까)
 						
 						// insert가 되면 절대 사이즈가 0이 아닐테니
-						for(let i=0;i<json.item.length;i++) {
-							let html = "";
-							html += '<tr><td>';
-							html += '<div class="form-group row">';
-        					html += '<div class="col-sm-2">'+json.item[i].id +'</div>';
-        					html += '<div class="col-sm-6">'+json.item[i].regDate + '</div>';
-        					html += '<div class="col-sm-4">';
-        					if(json.item[i].id == "<%=memberDto.getId() %>") {
-	        					html += '<a type="button" class="updateComment" href="#" > 수정  </a>';
-	        					html += '<a type="button" class="deleteComment" href="#" > 삭제  </a>';        						
-        					}
-        					html += '<input type="hidden" id="commentNo" name="commentNo" value="'+json.item[i].no +'">';
-        					html += '</div>';
-							html += '<div class="col-sm-1"></div>';
-							
-							if(json.item[i].id == "<%=memberDto.getId() %>") {
-	        					html += '<textarea class="form-control col-sm-10" rows="3" id="comment" name="comment" >'+ json.item[i].comment +'</textarea>';								
-							} else {
-	        					html += '<textarea class="form-control col-sm-10" rows="3" id="comment" readonly name="comment" >'+ json.item[i].comment +'</textarea>';
+						
+						if(json.item.length != 0) {
+							for(let i=0;i<json.item.length;i++) {
+								let html = "";
+								html += '<tr><td>';
+								html += '<div class="form-group row">';
+	        					html += '<div class="col-sm-2">'+json.item[i].id +'</div>';
+	        					html += '<div class="col-sm-6">'+json.item[i].regDate + '</div>';
+	        					html += '<div class="col-sm-4">';
+	        					if(json.item[i].id == "<%=memberDto.getId() %>") {
+		        					html += '<a type="button" class="updateComment" href="#" > 수정  </a>';
+		        					html += '<a type="button" class="deleteComment" href="#" > 삭제  </a>';        						
+	        					}
+	        					html += '<input type="hidden" id="commentNo" name="commentNo" value="'+json.item[i].no +'">';
+	        					html += '</div>';
+								html += '<div class="col-sm-1"></div>';
+								
+								if(json.item[i].id == "<%=memberDto.getId() %>") {
+		        					html += '<textarea class="form-control col-sm-10" rows="3" id="comment" name="comment" >'+ json.item[i].comment +'</textarea>';								
+								} else {
+		        					html += '<textarea class="form-control col-sm-10" rows="3" id="comment" readonly name="comment" >'+ json.item[i].comment +'</textarea>';
+									
+								}
+								
+	        					html += '</div>';
+								html += '</td></tr>';
+								
+								$("#commentTable>tbody").append(html);
 								
 							}
-							
-        					html += '</div>';
+						} else {
+							let html = "";
+							html += '<tr><td>';
+							html += "Don't Exist Data";
 							html += '</td></tr>';
 							
 							$("#commentTable>tbody").append(html);
-							
 						}
 						$("#commentTextArea").focus();
 						

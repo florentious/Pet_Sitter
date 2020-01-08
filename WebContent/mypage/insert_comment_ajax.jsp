@@ -20,7 +20,7 @@
 	boolean isSuccess = commentDao.insert(commentDto);
 		
 	// jsonArray 형태로만들어서 보냄(Dao에서도 JSON으로 코딩해야함)
-	JSONArray item = commentDao.selectJson();
+	JSONArray item = commentDao.selectJson(wantedNo);
 	
 	JSONObject obj = new JSONObject();
 	if(isSuccess) {
