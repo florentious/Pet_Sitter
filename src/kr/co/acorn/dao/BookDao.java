@@ -150,6 +150,66 @@ public class BookDao {
 		return list;
 	}
 	
+	// 다른사람에게도 보이는 문제 해결해야함
+	public JSONArray selectJson(int wantedNumber, String curId) {
+		JSONArray list = new JSONArray();
+		JSONObject obj = null;
+		
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		
+		try {
+			con = ConnLocator.getConnection();
+			
+			StringBuffer sql = new StringBuffer();
+			sql.append("SELECT b_no, b_wantedNo, b_applicId, b_content, b_regDate, b_bookStart, b_bookEnd, b_isConfirm ");
+			sql.append("FROM p_book ");
+			sql.append("WHERE b_wantedNo = ? AND b_applicId = ? ");
+			sql.append("ORDER BY b_no ");
+			ps = con.prepareStatement(sql.toString());
+			int index = 0;
+			ps.setInt(++index, wantedNumber);
+			ps.setString(++index, curId);
+			
+			rs = ps.executeQuery();
+			
+			while(rs.next()) {
+				index = 0;
+				int no = rs.getInt(++index);
+				int wantedNo = rs.getInt(++index);				
+				String applicId = rs.getString(++index);
+				String content = rs.getString(++index);
+				String regDate =rs.getString(++index);
+				String bookStart =rs.getString(++index);
+				String bookEnd =rs.getString(++index);
+				Boolean isConfirm = rs.getBoolean(++index);
+				
+				obj = new JSONObject();
+				
+				obj.put("no", no);
+				obj.put("wantedNo", wantedNo);
+				obj.put("applicId", applicId);
+				obj.put("content", content);
+				obj.put("regDate", regDate);
+				obj.put("bookStart", bookStart);
+				obj.put("bookEnd", bookEnd);
+				obj.put("isConfirm", isConfirm);
+				
+				list.add(obj);
+				
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			close(con,ps,rs);
+		}
+		
+		return list;
+	}
+	
+	
 	public JSONArray selectJson(int wantedNumber) {
 		JSONArray list = new JSONArray();
 		JSONObject obj = null;

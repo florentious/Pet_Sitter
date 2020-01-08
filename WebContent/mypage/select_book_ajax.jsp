@@ -8,12 +8,22 @@
 
 	int wantedNo = Integer.parseInt(request.getParameter("wantedNo"));
 	
+	String id = request.getParameter("id");
 	
 	
 	BookDao bookDao = BookDao.getInstance();
 	
 	// jsonArray 형태로만들어서 보냄(Dao에서도 JSON으로 코딩해야함)
-	JSONArray item = bookDao.selectJson(wantedNo);
+	JSONArray item = null;
+	
+	if(id == null) {
+		item = bookDao.selectJson(wantedNo);
+		
+	} else {
+		item = bookDao.selectJson(wantedNo, id);
+		
+	}
+	
 	
 	JSONObject obj = new JSONObject();
 	

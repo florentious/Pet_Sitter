@@ -337,7 +337,9 @@
 				$.ajax({
 					type : 'post',
 					url : 'select_book_ajax.jsp',
-					data : {wantedNo : $(this).parent().prev().prev().prev().prev().text()},
+					data : {wantedNo : $(this).parent().prev().prev().prev().prev().text(),
+						id : "<%=memberDto.getId() %>"
+					},
 					datatype : 'json',
 					error : function(){
 					},

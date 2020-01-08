@@ -252,7 +252,9 @@
 				 $.ajax({
 						type : 'post',
 						url : 'select_book_ajax.jsp',
-						data : {wantedNo : $(this).parent().prev().prev().prev().prev().text()},
+						data : {
+							wantedNo : $(this).parent().prev().prev().prev().prev().text()
+						},
 						datatype : 'json',
 						error : function(){
 						},
@@ -342,7 +344,9 @@
 				$.ajax({
 					type : 'post',
 					url : 'select_book_ajax.jsp',
-					data : {wantedNo : $(this).parent().prev().prev().prev().prev().text()},
+					data : {wantedNo : $(this).parent().prev().prev().prev().prev().text(),
+						id : "<%=memberDto.getId() %>"
+						},
 					datatype : 'json',
 					error : function(){
 					},
@@ -558,7 +562,7 @@
 			// 넘겨야할 것 : wantedNo, applicId, content, bookStart, bookEnd
 			data : {
 				wantedNo : $(this).parent().parent().prev().prev().children(":first").text(),
-				applicId : "<%=memberDto.getId() %>",
+				applicId : "<%=memberDto.getId() %>", 
 				content : $(this).parent().prev().find('#inputBookContent').val(),
 				bookStart : $(this).parent().prev().find('#inputBookStart').val(),
 				bookEnd : $(this).parent().prev().find('#inputBookEnd').val()
