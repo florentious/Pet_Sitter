@@ -5,7 +5,7 @@
 <%@page import="kr.co.acorn.dao.NoticeDao"%>
 <%@ page pageEncoding="utf-8" %>
 
-<%@ include file="../inc/header.jsp" %>
+<%@ include file="inc/header.jsp"%>
 
 <%
 	int start = 0;
@@ -136,11 +136,10 @@
 				
 			</div>
           
-            
       </div>
   </div>
 
   <!-- main end -->
   
   
-<%@ include file ="../inc/footer.jsp" %>
+<%@ include file ="inc/footer.jsp" %>

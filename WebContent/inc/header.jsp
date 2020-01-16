@@ -34,15 +34,16 @@
 
     <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
       <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-        <li class="nav-item <%if(uri.startsWith("/wanted/")) {%>active<%} %>">
-          <a class="nav-link" href="<%=contextPath %>/wanted/list.jsp">펫시터 <span class="sr-only">(current)</span></a>
-        </li>
-        
         
         <li class="nav-item <%if(uri.startsWith("/notice/")) {%>active<%} %>">
           <a class="nav-link" href="<%=contextPath %>/notice/list.jsp">공지사항</a>
         </li>
+        
+        <li class="nav-item <%if(uri.startsWith("/wanted/")) {%>active<%} %>">
+          <a class="nav-link" href="<%=contextPath %>/wanted/list.jsp">펫시터 <span class="sr-only">(current)</span></a>
+        </li>
       </ul>
+        
       
       <ul class="navbar-nav">
       <%
